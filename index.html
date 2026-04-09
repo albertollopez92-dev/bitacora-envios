@@ -297,63 +297,63 @@ tr:hover td{background:var(--surface2);}
 .letter-page{
   width:min(820px,100%);background:#fff;color:#111;
   font-family:'Times New Roman',Times,serif;
-  font-size:11.5pt;line-height:1.6;
-  padding:20mm 22mm;
+  font-size:9pt;line-height:1.45;
+  padding:12mm 16mm 10mm 16mm;
   border:1px solid #333;border-top:none;
   flex-shrink:0;
 }
 
-.lp-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6mm;border-bottom:2px solid #1a3a6b;padding-bottom:4mm;}
+.lp-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:3mm;border-bottom:2px solid #1a3a6b;padding-bottom:3mm;}
 .lp-logo-blk{display:flex;flex-direction:column;}
-.lp-brand{font-family:'Barlow Condensed',sans-serif;font-size:22pt;font-weight:700;color:#1a3a6b;letter-spacing:1px;line-height:1;}
-.lp-brand-sub{font-size:8pt;color:#f95f0a;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;font-family:'Barlow',sans-serif;}
-.lp-contact{font-size:8pt;color:#555;text-align:right;line-height:1.7;font-family:'Barlow',sans-serif;}
+.lp-brand{font-family:'Barlow Condensed',sans-serif;font-size:17pt;font-weight:700;color:#1a3a6b;letter-spacing:1px;line-height:1;}
+.lp-brand-sub{font-size:7pt;color:#f95f0a;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;font-family:'Barlow',sans-serif;}
+.lp-contact{font-size:7pt;color:#555;text-align:right;line-height:1.6;font-family:'Barlow',sans-serif;}
 
-.lp-doc-title{text-align:center;margin:5mm 0 4mm;}
-.lp-doc-title h1{font-size:13pt;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#1a3a6b;}
-.lp-doc-title p{font-size:8.5pt;color:#777;margin-top:2px;}
+.lp-doc-title{text-align:center;margin:2mm 0 2mm;}
+.lp-doc-title h1{font-size:10pt;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#1a3a6b;}
+.lp-doc-title p{font-size:7.5pt;color:#777;margin-top:1px;}
 
 .lp-folio-bar{
-  background:#f5f7fa;border:1px solid #dde;border-radius:4px;
-  padding:3mm 5mm;display:flex;justify-content:space-between;
-  font-family:'Barlow',sans-serif;font-size:9pt;margin-bottom:5mm;
+  background:#f5f7fa;border:1px solid #dde;border-radius:3px;
+  padding:1.5mm 4mm;display:flex;justify-content:space-between;
+  font-family:'Barlow',sans-serif;font-size:7.5pt;margin-bottom:3mm;flex-wrap:wrap;gap:2mm;
 }
 .lp-folio-key{color:#888;}
 .lp-folio-val{font-weight:700;color:#1a3a6b;}
 
-.lp-section{margin-bottom:5mm;}
-.lp-section-title{font-size:9pt;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#1a3a6b;border-bottom:1px solid #dde;padding-bottom:1mm;margin-bottom:3mm;font-family:'Barlow',sans-serif;}
+.lp-section{margin-bottom:2.5mm;}
+.lp-section-title{font-size:7.5pt;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#1a3a6b;border-bottom:1px solid #dde;padding-bottom:0.8mm;margin-bottom:2mm;font-family:'Barlow',sans-serif;}
 
-.lp-grid{display:grid;grid-template-columns:1fr 1fr;gap:2mm 6mm;}
-.lp-field{font-size:9.5pt;padding:1.5mm 0;border-bottom:1px solid #eee;}
-.lp-field-label{font-size:7.5pt;color:#888;text-transform:uppercase;letter-spacing:0.06em;font-family:'Barlow',sans-serif;}
+.lp-grid{display:grid;grid-template-columns:1fr 1fr;gap:1mm 5mm;}
+.lp-field{font-size:8pt;padding:1mm 0;border-bottom:1px solid #eee;}
+.lp-field-label{font-size:6.5pt;color:#888;text-transform:uppercase;letter-spacing:0.05em;font-family:'Barlow',sans-serif;}
 .lp-field-val{font-weight:700;color:#111;}
 
-.lp-clause{margin-bottom:3.5mm;font-size:10pt;text-align:justify;}
+.lp-clause{margin-bottom:2mm;font-size:7.5pt;text-align:justify;line-height:1.4;}
 .lp-clause-num{font-weight:700;color:#1a3a6b;}
 
-.lp-sign-section{margin-top:8mm;border-top:2px solid #1a3a6b;padding-top:5mm;}
-.lp-sign-title{font-size:9pt;font-weight:700;text-align:center;text-transform:uppercase;letter-spacing:0.08em;color:#1a3a6b;margin-bottom:3mm;font-family:'Barlow',sans-serif;}
-.lp-sign-hint{font-size:8.5pt;color:#888;text-align:center;margin-bottom:4mm;font-style:italic;}
+.lp-sign-section{margin-top:3mm;border-top:2px solid #1a3a6b;padding-top:3mm;}
+.lp-sign-title{font-size:7.5pt;font-weight:700;text-align:center;text-transform:uppercase;letter-spacing:0.08em;color:#1a3a6b;margin-bottom:1.5mm;font-family:'Barlow',sans-serif;}
+.lp-sign-hint{font-size:7pt;color:#888;text-align:center;margin-bottom:2mm;font-style:italic;}
 
 /* Canvas signature pad */
 #sig-canvas{
-  display:block;width:100%;height:120px;
-  border:1.5px solid #aaa;border-radius:6px;
+  display:block;width:100%;height:80px;
+  border:1.5px solid #aaa;border-radius:4px;
   background:#fafafa;cursor:crosshair;touch-action:none;
 }
 #sig-canvas.signed{border-color:#1a3a6b;}
-.sig-actions{display:flex;gap:8px;margin-top:3mm;justify-content:center;}
-.sig-btn-clear{background:transparent;color:#c00;border:1px solid #fcc;border-radius:4px;padding:5px 14px;font-size:10pt;cursor:pointer;font-family:'Barlow',sans-serif;}
-.sig-accept-hint{font-size:7.5pt;color:#aaa;text-align:center;margin-top:2mm;font-style:italic;}
+.sig-actions{display:flex;gap:8px;margin-top:2mm;justify-content:center;}
+.sig-btn-clear{background:transparent;color:#c00;border:1px solid #fcc;border-radius:4px;padding:4px 12px;font-size:9pt;cursor:pointer;font-family:'Barlow',sans-serif;}
+.sig-accept-hint{font-size:6.5pt;color:#aaa;text-align:center;margin-top:1mm;font-style:italic;}
 
-.lp-footer{margin-top:6mm;text-align:center;font-size:7.5pt;color:#aaa;border-top:1px solid #eee;padding-top:3mm;font-family:'Barlow',sans-serif;}
+.lp-footer{margin-top:3mm;text-align:center;font-size:6.5pt;color:#aaa;border-top:1px solid #eee;padding-top:2mm;font-family:'Barlow',sans-serif;}
 
 /* PRINT */
 @media print{
   body>*{display:none!important;}
   #print-portal{display:block!important;position:fixed;inset:0;background:#fff;z-index:99999;overflow:auto;}
-  #print-portal .letter-page{border:none;padding:15mm 18mm;font-size:10.5pt;}
+  #print-portal .letter-page{border:none;padding:10mm 14mm;}
   #print-portal .lp-sign-hint,#print-portal .sig-actions,#print-portal .sig-accept-hint{display:none!important;}
 }
 .parse-toast{font-size:11px;font-family:var(--mono);border:1px solid;border-radius:var(--r-sm);padding:6px 12px;display:none;margin-top:8px;}
@@ -1252,7 +1252,9 @@ function buildContractHTML(rec) {
 <div class="lp-section">
   <div class="lp-section-title">III. Términos y Condiciones del Servicio</div>
   <p style="font-size:9.5pt;color:#555;margin-bottom:3mm;font-family:'Barlow',sans-serif;">
+  <p style="font-size:7.5pt;color:#333;margin-bottom:2.5mm;text-align:justify;font-family:'Times New Roman',serif;">
     En la ciudad de <b>Agua Dulce, Veracruz</b>, siendo el <b>${fecha} a las ${hora} horas</b>, comparecen: por una parte, <b>${CENTRO.nombre}</b>, representado por el C. <b>${CENTRO.responsable}</b>, ${CENTRO.tipo}, con domicilio en ${CENTRO.direccion}, ${CENTRO.ciudad} (en adelante "EL CENTRO"); y por la otra, el cliente identificado como <b>${rec.remitente||'_________________________'}</b> (en adelante "EL CLIENTE"), quienes convienen en celebrar el presente contrato de conformidad con los artículos <b>1793, 1794, 1796 y 2025 del Código Civil Federal</b>, y los artículos <b>75, 80, 81, 85 y 371 del Código de Comercio vigente</b>, al tenor de las siguientes:
+  </p>
   </p>
 
   <div class="lp-clause"><span class="lp-clause-num">CLÁUSULA PRIMERA — NATURALEZA DEL SERVICIO.</span> <em>${CENTRO.nombre}</em> actúa exclusivamente como <strong>intermediario logístico</strong> entre el cliente y la empresa de paquetería y mensajería contratada (<strong>${rec.paq}</strong>). El presente centro de envíos no tiene el carácter de empresa transportista, por lo que no asume la custodia, ni la responsabilidad sobre el proceso de traslado, entrega o devolución del paquete, los cuales quedan bajo el control exclusivo de la paquetería seleccionada.</div>
@@ -1341,24 +1343,33 @@ async function generatePDF() {
     if (!confirm('El cliente aún no ha firmado. ¿Desea generar el PDF de todas formas?')) return;
   }
 
-  // Load html2canvas + jsPDF from CDN
+  const btn = document.querySelector('.cb-pdf');
+  const origText = btn.textContent;
+  btn.textContent = '⏳ Generando…';
+  btn.disabled = true;
+
   await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
   await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
 
   const page = document.getElementById('contract-page');
 
-  // Temporarily embed signature into the page as an <img> so it renders in html2canvas
+  // Embed signature as static image
+  let sigImg = null;
   if (sigCanvas && sigHasContent) {
-    const sigImg = document.createElement('img');
+    sigImg = document.createElement('img');
     sigImg.id = 'sig-embed';
     sigImg.src = sigCanvas.toDataURL('image/png');
-    sigImg.style.cssText = 'width:100%;height:120px;object-fit:contain;border:1.5px solid #1a3a6b;border-radius:6px;display:block;';
+    sigImg.style.cssText = 'width:100%;height:80px;object-fit:contain;border:1.5px solid #1a3a6b;border-radius:4px;display:block;';
     sigCanvas.style.display = 'none';
     sigCanvas.parentNode.insertBefore(sigImg, sigCanvas);
   }
 
-  // Hide interactive elements during capture
-  document.querySelectorAll('.sig-actions,.lp-sign-hint,.sig-accept-hint').forEach(el => el.style.visibility = 'hidden');
+  // Hide interactive elements
+  document.querySelectorAll('.sig-actions,.lp-sign-hint,.sig-accept-hint,.contract-topbar').forEach(el => el.style.visibility = 'hidden');
+
+  // Temporarily set exact letter-page width for capture
+  const origWidth = page.style.width;
+  page.style.width = '794px'; // 216mm at 96dpi ≈ 794px
 
   try {
     const canvas = await html2canvas(page, {
@@ -1366,36 +1377,43 @@ async function generatePDF() {
       useCORS: true,
       backgroundColor: '#ffffff',
       logging: false,
-      windowWidth: 820
+      width: 794,
+      windowWidth: 794
     });
 
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF({ orientation:'portrait', unit:'mm', format:'letter' });
 
-    const imgW = 215.9; // letter width mm
-    const imgH = (canvas.height * imgW) / canvas.width;
-    const pageH = 279.4; // letter height mm
-    let yPos = 0;
+    // Letter dimensions in mm
+    const pgW = 215.9;
+    const pgH = 279.4;
 
-    while (yPos < imgH) {
-      if (yPos > 0) pdf.addPage();
-      pdf.addImage(
-        canvas.toDataURL('image/jpeg', 0.95),
-        'JPEG',
-        0, -yPos,
-        imgW, imgH
-      );
-      yPos += pageH;
+    // Scale image to fit exactly one page
+    const imgW = pgW;
+    const imgH = (canvas.height / canvas.width) * pgW;
+
+    if (imgH <= pgH) {
+      // Fits in one page — center vertically
+      const yOffset = (pgH - imgH) / 2;
+      pdf.addImage(canvas.toDataURL('image/jpeg', 0.97), 'JPEG', 0, yOffset, imgW, imgH);
+    } else {
+      // Scale down to fit height
+      const scale  = pgH / imgH;
+      const scaledW = imgW * scale;
+      const xOffset = (pgW - scaledW) / 2;
+      pdf.addImage(canvas.toDataURL('image/jpeg', 0.97), 'JPEG', xOffset, 0, scaledW, pgH);
     }
 
-    const folio = 'AD-' + String(Date.now()).slice(-8).toUpperCase();
+    const folio = document.querySelector('.lp-folio-val')?.textContent || Date.now();
     pdf.save(`Contrato_ADomicilio_${folio}.pdf`);
+
   } finally {
-    // Restore UI
-    const sigEmbed = document.getElementById('sig-embed');
-    if (sigEmbed) sigEmbed.remove();
+    page.style.width = origWidth;
+    if (sigImg) sigImg.remove();
     if (sigCanvas) sigCanvas.style.display = 'block';
-    document.querySelectorAll('.sig-actions,.lp-sign-hint,.sig-accept-hint').forEach(el => el.style.visibility = '');
+    document.querySelectorAll('.sig-actions,.lp-sign-hint,.sig-accept-hint,.contract-topbar').forEach(el => el.style.visibility = '');
+    btn.textContent = origText;
+    btn.disabled = false;
   }
 }
 
