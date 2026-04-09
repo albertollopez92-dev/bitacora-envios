@@ -3,54 +3,77 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Bitácora — Centro de Envíos</title>
+<title>ADomicilio — Bitácora de Envíos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
 :root{
-  --bg:#0f0f0f;
-  --surface:#1a1a1a;
-  --surface2:#222222;
-  --surface3:#2a2a2a;
-  --border:rgba(255,255,255,0.08);
-  --border2:rgba(255,255,255,0.15);
-  --text:#f0f0f0;
-  --text2:#888;
-  --text3:#555;
-  --accent:#e8ff47;
-  --accent-dark:#1a1a00;
+  --bg:#0a0d14;
+  --surface:#111620;
+  --surface2:#171d2b;
+  --surface3:#1e2638;
+  --border:rgba(255,255,255,0.07);
+  --border2:rgba(255,255,255,0.14);
+  --text:#eef2ff;
+  --text2:#7a8aaa;
+  --text3:#445066;
+  /* ADomicilio brand */
+  --brand-navy:#1a3a6b;
+  --brand-orange:#f95f0a;
+  --brand-yellow:#ffc20e;
+  --accent:#f95f0a;
+  --accent-light:#ff8040;
+  --accent-bg:rgba(249,95,10,0.12);
+  /* status colors */
   --red:#ff5f5f;
-  --red-bg:rgba(255,95,95,0.12);
-  --green:#4dff91;
-  --green-bg:rgba(77,255,145,0.1);
-  --blue:#5fb8ff;
-  --blue-bg:rgba(95,184,255,0.1);
-  --amber:#ffb347;
-  --amber-bg:rgba(255,179,71,0.12);
-  --purple:#bf8fff;
-  --purple-bg:rgba(191,143,255,0.12);
+  --red-bg:rgba(255,95,95,0.1);
+  --green:#3ddc84;
+  --green-bg:rgba(61,220,132,0.1);
+  --blue:#5b9cf6;
+  --blue-bg:rgba(91,156,246,0.1);
+  --amber:#ffc20e;
+  --amber-bg:rgba(255,194,14,0.12);
+  --purple:#b57bee;
+  --purple-bg:rgba(181,123,238,0.12);
   --r:10px;
   --r-sm:6px;
   --mono:'IBM Plex Mono',monospace;
-  --sans:'IBM Plex Sans',system-ui,sans-serif;
+  --sans:'Barlow',system-ui,sans-serif;
+  --condensed:'Barlow Condensed',sans-serif;
 }
 
 body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;min-height:100vh;padding:0}
 
 /* ── HEADER ── */
 .header{
-  background:var(--surface);border-bottom:1px solid var(--border);
-  padding:1rem 1.25rem;display:flex;align-items:center;gap:12px;
+  background:linear-gradient(135deg, #0d1525 0%, #112040 100%);
+  border-bottom:1px solid rgba(249,95,10,0.25);
+  padding:.875rem 1.25rem;display:flex;align-items:center;gap:12px;
   position:sticky;top:0;z-index:100;
 }
-.header-icon{
-  width:36px;height:36px;background:var(--accent);border-radius:8px;
-  display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;
+.header-logo{
+  display:flex;align-items:center;gap:10px;
 }
-.header-title{font-size:16px;font-weight:500;font-family:var(--mono);letter-spacing:-0.3px;}
-.header-sub{font-size:11px;color:var(--text2);margin-top:1px;}
+.logo-mark{
+  width:38px;height:38px;border-radius:9px;
+  background:linear-gradient(135deg,#f95f0a,#ffc20e);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;
+  box-shadow:0 2px 12px rgba(249,95,10,0.4);
+}
+.logo-text{
+  display:flex;flex-direction:column;gap:1px;
+}
+.logo-name{
+  font-family:var(--condensed);font-size:18px;font-weight:700;
+  letter-spacing:0.5px;
+  background:linear-gradient(90deg,#fff 0%,#ffc20e 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  line-height:1;
+}
+.logo-sub{font-size:10px;color:rgba(255,255,255,0.45);letter-spacing:0.08em;text-transform:uppercase;font-family:var(--mono);}
 .header-right{margin-left:auto;display:flex;gap:8px;}
 
 /* ── TABS ── */
@@ -62,7 +85,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:14
   letter-spacing:0.02em;
 }
 .tab:hover{color:var(--text);}
-.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.tab.active{color:var(--brand-orange);border-bottom-color:var(--brand-orange);}
 
 /* ── CONTENT ── */
 .content{padding:1.25rem;max-width:900px;margin:0 auto;}
@@ -72,6 +95,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:14
 .stat{
   background:var(--surface);border:1px solid var(--border);
   border-radius:var(--r);padding:.875rem 1rem;
+  border-top:2px solid var(--brand-orange);
 }
 .stat-val{font-size:26px;font-weight:500;font-family:var(--mono);letter-spacing:-1px;line-height:1;}
 .stat-label{font-size:10px;color:var(--text2);margin-top:4px;text-transform:uppercase;letter-spacing:0.06em;}
@@ -128,7 +152,7 @@ textarea{height:64px;resize:vertical;}
   font-size:18px;display:flex;align-items:center;justify-content:center;
   transition:background 0.12s;flex-shrink:0;
 }
-.scan-icon-btn:hover{background:#333;}
+.scan-icon-btn:hover{background:var(--surface3);border-color:var(--brand-orange);color:var(--brand-orange);}
 
 /* photo zones */
 .photo-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
@@ -159,8 +183,8 @@ textarea{height:64px;resize:vertical;}
   padding:9px 20px;border-radius:var(--r-sm);cursor:pointer;
   border:1px solid var(--border2);transition:all 0.12s;
 }
-.btn-accent{background:var(--accent);color:#000;border-color:var(--accent);}
-.btn-accent:hover{opacity:0.88;}
+.btn-accent{background:linear-gradient(135deg,#f95f0a 0%,#ffc20e 100%);color:#000;border-color:transparent;font-weight:600;letter-spacing:0.01em;}
+.btn-accent:hover{opacity:0.9;box-shadow:0 2px 16px rgba(249,95,10,0.4);}
 .btn-ghost{background:transparent;color:var(--text2);}
 .btn-ghost:hover{background:var(--surface2);}
 
@@ -215,7 +239,35 @@ tr:hover td{background:var(--surface2);}
 
 .empty{text-align:center;padding:3rem;color:var(--text3);font-size:13px;font-family:var(--mono);}
 
-/* ── SCANNER MODAL ── */
+/* ── UPDATE BUTTON ── */
+.update-btn{
+  background:transparent;border:1px solid var(--border2);
+  border-radius:var(--r-sm);padding:6px 12px;
+  color:var(--text2);font-size:11px;font-family:var(--mono);
+  cursor:pointer;display:flex;align-items:center;gap:6px;
+  transition:all 0.15s;white-space:nowrap;
+}
+.update-btn:hover{border-color:var(--accent);color:var(--accent);}
+.update-btn.has-update{border-color:var(--accent);color:var(--accent);background:rgba(232,255,71,0.08);animation:pulse-border 2s ease-in-out infinite;}
+.update-btn.checking{opacity:0.5;pointer-events:none;}
+@keyframes pulse-border{0%,100%{box-shadow:0 0 0 0 rgba(232,255,71,0.3)}50%{box-shadow:0 0 0 4px rgba(232,255,71,0)}}
+
+.update-toast{
+  position:fixed;bottom:1.25rem;left:50%;transform:translateX(-50%);
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:var(--r);padding:12px 18px;
+  font-size:12px;font-family:var(--mono);color:var(--text);
+  z-index:9998;display:none;text-align:center;
+  box-shadow:0 4px 24px rgba(0,0,0,0.5);min-width:260px;
+}
+.update-toast.show{display:block;}
+.update-toast-title{font-weight:500;margin-bottom:4px;color:var(--brand-orange);}
+.update-toast-btns{display:flex;gap:8px;margin-top:10px;justify-content:center;}
+.toast-apply{background:linear-gradient(135deg,#f95f0a,#ffc20e);color:#000;border:none;border-radius:var(--r-sm);padding:7px 18px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--sans);}
+.toast-dismiss{background:transparent;color:var(--text2);border:1px solid var(--border2);border-radius:var(--r-sm);padding:7px 14px;font-size:12px;cursor:pointer;font-family:var(--sans);}
+
+.parse-toast{font-size:11px;font-family:var(--mono);border:1px solid;border-radius:var(--r-sm);padding:6px 12px;display:none;margin-top:8px;}
+
 .scanner-modal{
   display:none;position:fixed;inset:0;
   background:rgba(0,0,0,0.96);z-index:10000;
@@ -225,19 +277,19 @@ tr:hover td{background:var(--surface2);}
 .scanner-inner{position:relative;width:min(400px,95vw);border-radius:var(--r);overflow:hidden;background:#000;}
 #scanner-video{width:100%;display:block;max-height:55vh;object-fit:cover;}
 .scan-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;}
-.scan-frame{width:72%;aspect-ratio:2.5/1;border:2px solid var(--accent);border-radius:8px;box-shadow:0 0 0 9999px rgba(0,0,0,0.5);}
-.scan-line{position:absolute;left:14%;right:14%;height:2px;background:var(--accent);opacity:0.8;animation:scanline 1.8s ease-in-out infinite;}
+.scan-frame{width:72%;aspect-ratio:2.5/1;border:2px solid var(--brand-orange);border-radius:8px;box-shadow:0 0 0 9999px rgba(0,0,0,0.5);}
+.scan-line{position:absolute;left:14%;right:14%;height:2px;background:var(--brand-orange);opacity:0.9;animation:scanline 1.8s ease-in-out infinite;}
 @keyframes scanline{0%{top:22%}50%{top:75%}100%{top:22%}}
 .scanner-hint{color:rgba(255,255,255,0.6);font-size:12px;text-align:center;margin-top:14px;font-family:var(--mono);}
 .scan-result-box{
-  color:var(--accent);font-family:var(--mono);font-size:13px;
-  background:rgba(232,255,71,0.08);border:1px solid rgba(232,255,71,0.2);
+  color:var(--brand-orange);font-family:var(--mono);font-size:13px;
+  background:rgba(249,95,10,0.08);border:1px solid rgba(249,95,10,0.25);
   border-radius:var(--r-sm);padding:8px 14px;margin-top:10px;
   min-height:36px;text-align:center;max-width:min(400px,95vw);word-break:break-all;
 }
 .scan-err{color:var(--red);font-size:11px;text-align:center;margin-top:6px;font-family:var(--mono);}
 .scan-actions{display:flex;gap:10px;margin-top:14px;}
-.scan-use{background:var(--accent);color:#000;border:none;border-radius:var(--r-sm);padding:9px 22px;font-size:13px;font-weight:500;cursor:pointer;display:none;font-family:var(--sans);}
+.scan-use{background:linear-gradient(135deg,#f95f0a,#ffc20e);color:#000;border:none;border-radius:var(--r-sm);padding:9px 22px;font-size:13px;font-weight:600;cursor:pointer;display:none;font-family:var(--sans);}
 .scan-cancel-btn{background:rgba(255,255,255,0.08);color:#fff;border:none;border-radius:var(--r-sm);padding:9px 22px;font-size:13px;cursor:pointer;font-family:var(--sans);}
 
 /* ── LIGHTBOX ── */
@@ -258,10 +310,30 @@ tr:hover td{background:var(--surface2);}
 <body>
 
 <div class="header">
-  <div class="header-icon">📦</div>
-  <div>
-    <div class="header-title">Bitácora</div>
-    <div class="header-sub">Centro de Envíos · FedEx · Estafeta · DHL · J&T</div>
+  <div class="header-logo">
+    <div class="logo-mark">🚚</div>
+    <div class="logo-text">
+      <div class="logo-name">ADomicilio</div>
+      <div class="logo-sub">Bitácora de Envíos</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <button class="update-btn" id="update-btn" onclick="checkForUpdate()" title="Verificar actualización">
+      <span id="update-icon">↻</span>
+      <span id="update-label">Actualizar</span>
+    </button>
+  </div>
+</div>
+<!-- brand speed stripe -->
+<div style="height:3px;background:linear-gradient(90deg,#f95f0a 0%,#ffc20e 60%,transparent 100%);"></div>
+
+<!-- Update toast -->
+<div class="update-toast" id="update-toast">
+  <div class="update-toast-title">✦ Nueva versión disponible</div>
+  <div style="color:var(--text2);font-size:11px;">Se actualizará automáticamente.<br>Tus datos no se perderán.</div>
+  <div class="update-toast-btns">
+    <button class="toast-apply" onclick="applyUpdate()">Instalar ahora</button>
+    <button class="toast-dismiss" onclick="dismissUpdate()">Después</button>
   </div>
 </div>
 
@@ -312,6 +384,7 @@ tr:hover td{background:var(--surface2);}
           <input type="text" id="f-codigo" placeholder="Pega o escanea el código" oninput="autoExtract()">
           <button class="scan-icon-btn" onclick="openScanner()" title="Escanear">📷</button>
         </div>
+        <div class="parse-toast" id="parse-toast"></div>
       </div>
       <div class="field">
         <label id="guia-label">Número de guía</label>
@@ -556,19 +629,137 @@ const CARRIERS = {
   'J&T':    { label:'Guía J&T (JMX+12)',       placeholder:'JMX007643467920', extract: v => v.trim(), url: g => `https://www.jtexpress.mx/trajectoryQuery?flag=3&waybillNo=${g}` }
 };
 
-function onPaqChange() {
-  const cfg = CARRIERS[document.getElementById('f-paq').value] || CARRIERS.FedEx;
-  document.getElementById('guia-label').textContent = cfg.label;
-  document.getElementById('f-guia').placeholder = cfg.placeholder;
-  autoExtract();
+// ── SMART BARCODE PARSER ──────────────────────────────────────
+// Detects carrier from scanned code and fills all possible fields
+
+function parseBarcode(raw) {
+  const v = raw.trim();
+  const result = { guia: '', paq: '', origen: null, info: '' };
+
+  // ── Mercado Libre devolucion (34 digits, ends in FedEx 12)
+  if (/^\d{34}$/.test(v)) {
+    result.guia   = v.slice(-12);
+    result.paq    = 'FedEx';
+    result.origen = 'devolucion';
+    result.info   = 'Devolución Mercado Libre detectada';
+    return result;
+  }
+
+  // ── FedEx Ground "96" barcode (21-22 digits starting with 96)
+  if (/^96\d{19,20}$/.test(v)) {
+    result.guia = v.slice(-12);
+    result.paq  = 'FedEx';
+    result.info = 'FedEx Ground';
+    return result;
+  }
+
+  // ── FedEx Express 12 digits
+  if (/^\d{12}$/.test(v)) {
+    result.guia = v;
+    result.paq  = 'FedEx';
+    result.info = 'FedEx Express';
+    return result;
+  }
+
+  // ── FedEx 15, 20 digits
+  if (/^\d{15}$/.test(v) || /^\d{20}$/.test(v)) {
+    result.guia = v;
+    result.paq  = 'FedEx';
+    result.info = 'FedEx';
+    return result;
+  }
+
+  // ── Estafeta 22 chars (digits + possible letters like C)
+  if (/^[A-Z0-9]{22}$/.test(v)) {
+    result.guia = v;
+    result.paq  = 'Estafeta';
+    result.info = 'Estafeta detectada';
+    return result;
+  }
+
+  // ── J&T  JMX + 12 digits
+  if (/^JMX\d{12}$/i.test(v)) {
+    result.guia = v.toUpperCase();
+    result.paq  = 'J&T';
+    result.info = 'J&T Express detectada';
+    return result;
+  }
+
+  // ── DHL 10-11 digits
+  if (/^\d{10,11}$/.test(v)) {
+    result.guia = v;
+    result.paq  = 'DHL';
+    result.info = 'DHL detectada';
+    return result;
+  }
+
+  // ── PDF-417 FedEx multi-field (contains field separators)
+  if (v.includes('\u001d') || v.includes('\u001e') || v.includes('\u001c')) {
+    // Try to extract tracking number from GS1 encoded data
+    const segments = v.split(/[\u001d\u001e\u001c\u001f]/);
+    for (const seg of segments) {
+      const m = seg.match(/\d{12,22}/);
+      if (m) {
+        result.guia = m[0].slice(-12);
+        result.paq  = 'FedEx';
+        result.info = 'FedEx 2D (PDF-417)';
+        return result;
+      }
+    }
+  }
+
+  // ── Fallback: just put whatever was scanned in the code field
+  result.guia = v.length >= 12 ? v.slice(-12) : v;
+  result.info = '';
+  return result;
+}
+
+function applyParsedBarcode(raw) {
+  const parsed = parseBarcode(raw);
+
+  // Fill codigo field always
+  document.getElementById('f-codigo').value = raw;
+
+  // Fill guia
+  if (parsed.guia) document.getElementById('f-guia').value = parsed.guia;
+
+  // Set paqueteria if detected
+  if (parsed.paq) {
+    document.getElementById('f-paq').value = parsed.paq;
+    onPaqChange();
+    // Re-set guia after onPaqChange updates placeholder
+    if (parsed.guia) document.getElementById('f-guia').value = parsed.guia;
+  }
+
+  // Set origin if detected
+  if (parsed.origen) setOrigin(parsed.origen);
+
+  // Show detection info toast
+  if (parsed.info) showParseToast(parsed.info, parsed.paq);
+}
+
+function showParseToast(info, paq) {
+  const colors = { FedEx:'var(--blue)', Estafeta:'var(--amber)', DHL:'var(--red)', 'J&T':'var(--green)' };
+  const color = colors[paq] || 'var(--accent)';
+  const toast = document.getElementById('parse-toast');
+  toast.textContent = '✓ ' + info;
+  toast.style.color = color;
+  toast.style.borderColor = color;
+  toast.style.background = color.replace(')', ', 0.08)').replace('var(', 'rgba(').replace(/var\([^)]+\)/, color);
+  toast.style.display = 'block';
+  setTimeout(() => toast.style.display = 'none', 3000);
 }
 
 function autoExtract() {
   const v = document.getElementById('f-codigo').value.trim();
   if (!v) return;
+  applyParsedBarcode(v);
+}
+
+function onPaqChange() {
   const cfg = CARRIERS[document.getElementById('f-paq').value] || CARRIERS.FedEx;
-  const ex = cfg.extract(v);
-  if (ex) document.getElementById('f-guia').value = ex;
+  document.getElementById('guia-label').textContent = cfg.label;
+  document.getElementById('f-guia').placeholder = cfg.placeholder;
 }
 
 function getUrl(paq, guia) {
@@ -774,8 +965,7 @@ function handleScanResult(val) {
 
 function confirmScan() {
   if (!lastScanned) return;
-  document.getElementById('f-codigo').value = lastScanned;
-  autoExtract();
+  applyParsedBarcode(lastScanned);
   closeScanner();
 }
 
@@ -787,10 +977,113 @@ function closeScanner() {
   document.getElementById('scanner-video').srcObject = null;
 }
 
+// ── AUTO-UPDATE ───────────────────────────────────────────────
+const GITHUB_RAW = 'https://raw.githubusercontent.com/albertollopez92-dev/bitacora-envios/main/index.html';
+const VERSION_KEY = 'bitacora_version';
+let pendingUpdate = null;
+
+// Extract a version hash from HTML content (uses last-modified meta or content length as proxy)
+function getContentHash(html) {
+  // Use a simple checksum of the first 2000 chars as version fingerprint
+  let hash = 0;
+  const sample = html.slice(0, 2000);
+  for (let i = 0; i < sample.length; i++) {
+    hash = ((hash << 5) - hash) + sample.charCodeAt(i);
+    hash |= 0;
+  }
+  return hash.toString(36);
+}
+
+async function checkForUpdate() {
+  const btn = document.getElementById('update-btn');
+  const icon = document.getElementById('update-icon');
+  const label = document.getElementById('update-label');
+
+  btn.classList.add('checking');
+  icon.style.display = 'inline-block';
+  icon.style.animation = 'spin 1s linear infinite';
+  label.textContent = 'Verificando…';
+
+  // Add spin animation dynamically
+  if (!document.getElementById('spin-style')) {
+    const s = document.createElement('style');
+    s.id = 'spin-style';
+    s.textContent = '@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}';
+    document.head.appendChild(s);
+  }
+
+  try {
+    const res = await fetch(GITHUB_RAW + '?t=' + Date.now());
+    if (!res.ok) throw new Error('No se pudo conectar');
+    const remoteHTML = await res.text();
+    const remoteHash = getContentHash(remoteHTML);
+    const localHash  = localStorage.getItem(VERSION_KEY) || getContentHash(document.documentElement.outerHTML);
+
+    btn.classList.remove('checking');
+    icon.style.animation = '';
+
+    if (remoteHash !== localHash) {
+      pendingUpdate = remoteHTML;
+      btn.classList.add('has-update');
+      icon.textContent = '✦';
+      label.textContent = 'Nueva versión';
+      document.getElementById('update-toast').classList.add('show');
+    } else {
+      icon.textContent = '✓';
+      label.textContent = 'Al día';
+      setTimeout(() => { icon.textContent = '↻'; label.textContent = 'Actualizar'; }, 3000);
+    }
+  } catch(e) {
+    btn.classList.remove('checking');
+    icon.style.animation = '';
+    icon.textContent = '✕';
+    label.textContent = 'Sin conexión';
+    setTimeout(() => { icon.textContent = '↻'; label.textContent = 'Actualizar'; }, 3000);
+  }
+}
+
+function applyUpdate() {
+  if (!pendingUpdate) return;
+  // Save current data before replacing
+  const savedRecords = localStorage.getItem('bitacora_v1');
+  const newHash = getContentHash(pendingUpdate);
+  localStorage.setItem(VERSION_KEY, newHash);
+  // Write new HTML and reload
+  document.open();
+  document.write(pendingUpdate);
+  document.close();
+  // Restore data after page rewrites (runs in new context)
+  if (savedRecords) localStorage.setItem('bitacora_v1', savedRecords);
+}
+
+function dismissUpdate() {
+  document.getElementById('update-toast').classList.remove('show');
+}
+
+// Auto-check on load silently (no UI change unless update found)
+async function silentUpdateCheck() {
+  try {
+    const res = await fetch(GITHUB_RAW + '?t=' + Date.now());
+    if (!res.ok) return;
+    const remoteHTML = await res.text();
+    const remoteHash = getContentHash(remoteHTML);
+    const localHash  = localStorage.getItem(VERSION_KEY) || getContentHash(document.documentElement.outerHTML);
+    if (remoteHash !== localHash) {
+      pendingUpdate = remoteHTML;
+      document.getElementById('update-btn').classList.add('has-update');
+      document.getElementById('update-icon').textContent = '✦';
+      document.getElementById('update-label').textContent = 'Nueva versión';
+      document.getElementById('update-toast').classList.add('show');
+    }
+  } catch(e) {}
+}
+
 // ── INIT ──────────────────────────────────────────────────────
 document.getElementById('f-fecha').value = today();
 onPaqChange();
 updateStats();
+// Check for updates in background after 2 seconds
+setTimeout(silentUpdateCheck, 2000);
 </script>
 </body>
 </html>
