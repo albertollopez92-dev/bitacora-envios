@@ -269,64 +269,92 @@ tr:hover td{background:var(--surface2);}
 .btn-ticket{background:var(--surface2);color:var(--text);border-color:var(--border2);}
 .btn-ticket:hover{border-color:var(--brand-orange);color:var(--brand-orange);}
 
-/* ── TICKET MODAL ── */
-.ticket-modal{
+/* ── CONTRACT MODAL ── */
+.contract-modal{
   display:none;position:fixed;inset:0;
-  background:rgba(0,0,0,0.88);z-index:11000;
-  align-items:center;justify-content:center;padding:1rem;overflow-y:auto;
+  background:rgba(0,0,0,0.92);z-index:11000;
+  flex-direction:column;align-items:center;
+  overflow-y:auto;padding:1rem 0;
 }
-.ticket-modal.open{display:flex;}
-.ticket-wrapper{
-  background:#fff;border-radius:var(--r);
-  width:min(380px,100%);position:relative;
-  box-shadow:0 8px 40px rgba(0,0,0,0.6);
+.contract-modal.open{display:flex;}
+
+.contract-topbar{
+  width:min(820px,100%);display:flex;gap:8px;align-items:center;
+  padding:10px 16px;background:#1a1a1a;border-radius:var(--r) var(--r) 0 0;
+  border:1px solid #333;border-bottom:none;flex-shrink:0;
+  flex-wrap:wrap;
 }
-.ticket-actions{
-  display:flex;gap:8px;padding:12px 16px;
-  background:#f5f5f5;border-bottom:1px solid #e0e0e0;
-  border-radius:var(--r) var(--r) 0 0;
-}
-.ticket-print-btn{
-  background:linear-gradient(135deg,#f95f0a,#ffc20e);color:#000;
-  border:none;border-radius:6px;padding:8px 18px;
-  font-size:13px;font-weight:700;cursor:pointer;font-family:var(--sans);
-}
-.ticket-close-btn{
-  background:transparent;color:#666;border:1px solid #ccc;
-  border-radius:6px;padding:8px 14px;font-size:13px;cursor:pointer;font-family:var(--sans);
-  margin-left:auto;
+.contract-topbar-title{font-family:var(--mono);font-size:12px;color:#aaa;flex:1;}
+.cb{border:none;border-radius:6px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--sans);}
+.cb-pdf{background:linear-gradient(135deg,#f95f0a,#ffc20e);color:#000;}
+.cb-pdf:hover{opacity:0.9;}
+.cb-close{background:transparent;color:#888;border:1px solid #444;}
+.cb-close:hover{color:#fff;border-color:#888;}
+.cb-clear{background:transparent;color:#e55;border:1px solid #633;font-size:12px;padding:7px 12px;}
+.cb-clear:hover{background:#300;}
+
+/* ── LETTER PAGE ── */
+.letter-page{
+  width:min(820px,100%);background:#fff;color:#111;
+  font-family:'Times New Roman',Times,serif;
+  font-size:11.5pt;line-height:1.6;
+  padding:20mm 22mm;
+  border:1px solid #333;border-top:none;
+  flex-shrink:0;
 }
 
-/* ── TICKET CONTENT (what gets printed) ── */
-#ticket-content{
-  font-family:'Courier New',Courier,monospace;
-  font-size:11px;color:#000;background:#fff;
-  padding:16px;line-height:1.45;
-}
-.tk-header{text-align:center;margin-bottom:8px;}
-.tk-logo{font-size:17px;font-weight:900;letter-spacing:1px;}
-.tk-sub{font-size:9px;color:#555;letter-spacing:0.05em;}
-.tk-div{border-top:1px dashed #999;margin:7px 0;}
-.tk-div-solid{border-top:1px solid #000;margin:7px 0;}
-.tk-row{display:flex;justify-content:space-between;gap:4px;margin:2px 0;}
-.tk-label{color:#555;font-size:10px;white-space:nowrap;}
-.tk-val{font-weight:700;text-align:right;font-size:10px;word-break:break-all;}
-.tk-section-title{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#333;margin:6px 0 3px;}
-.tk-folio{text-align:center;font-size:16px;font-weight:900;letter-spacing:2px;margin:6px 0;}
-.tk-badge{display:inline-block;border:1px solid #000;padding:1px 6px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;}
-.tk-contract{font-size:8.5px;color:#333;line-height:1.5;text-align:justify;}
-.tk-contract b{color:#000;}
-.tk-firma{margin-top:10px;border-top:1px solid #999;padding-top:6px;}
-.tk-firma-line{border-top:1px solid #000;margin-top:22px;width:60%;margin-left:auto;margin-right:auto;}
-.tk-firma-label{text-align:center;font-size:8px;color:#555;margin-top:2px;}
-.tk-footer{text-align:center;font-size:8px;color:#888;margin-top:8px;}
+.lp-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6mm;border-bottom:2px solid #1a3a6b;padding-bottom:4mm;}
+.lp-logo-blk{display:flex;flex-direction:column;}
+.lp-brand{font-family:'Barlow Condensed',sans-serif;font-size:22pt;font-weight:700;color:#1a3a6b;letter-spacing:1px;line-height:1;}
+.lp-brand-sub{font-size:8pt;color:#f95f0a;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;font-family:'Barlow',sans-serif;}
+.lp-contact{font-size:8pt;color:#555;text-align:right;line-height:1.7;font-family:'Barlow',sans-serif;}
 
-/* PRINT STYLES */
+.lp-doc-title{text-align:center;margin:5mm 0 4mm;}
+.lp-doc-title h1{font-size:13pt;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#1a3a6b;}
+.lp-doc-title p{font-size:8.5pt;color:#777;margin-top:2px;}
+
+.lp-folio-bar{
+  background:#f5f7fa;border:1px solid #dde;border-radius:4px;
+  padding:3mm 5mm;display:flex;justify-content:space-between;
+  font-family:'Barlow',sans-serif;font-size:9pt;margin-bottom:5mm;
+}
+.lp-folio-key{color:#888;}
+.lp-folio-val{font-weight:700;color:#1a3a6b;}
+
+.lp-section{margin-bottom:5mm;}
+.lp-section-title{font-size:9pt;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#1a3a6b;border-bottom:1px solid #dde;padding-bottom:1mm;margin-bottom:3mm;font-family:'Barlow',sans-serif;}
+
+.lp-grid{display:grid;grid-template-columns:1fr 1fr;gap:2mm 6mm;}
+.lp-field{font-size:9.5pt;padding:1.5mm 0;border-bottom:1px solid #eee;}
+.lp-field-label{font-size:7.5pt;color:#888;text-transform:uppercase;letter-spacing:0.06em;font-family:'Barlow',sans-serif;}
+.lp-field-val{font-weight:700;color:#111;}
+
+.lp-clause{margin-bottom:3.5mm;font-size:10pt;text-align:justify;}
+.lp-clause-num{font-weight:700;color:#1a3a6b;}
+
+.lp-sign-section{margin-top:8mm;border-top:2px solid #1a3a6b;padding-top:5mm;}
+.lp-sign-title{font-size:9pt;font-weight:700;text-align:center;text-transform:uppercase;letter-spacing:0.08em;color:#1a3a6b;margin-bottom:3mm;font-family:'Barlow',sans-serif;}
+.lp-sign-hint{font-size:8.5pt;color:#888;text-align:center;margin-bottom:4mm;font-style:italic;}
+
+/* Canvas signature pad */
+#sig-canvas{
+  display:block;width:100%;height:120px;
+  border:1.5px solid #aaa;border-radius:6px;
+  background:#fafafa;cursor:crosshair;touch-action:none;
+}
+#sig-canvas.signed{border-color:#1a3a6b;}
+.sig-actions{display:flex;gap:8px;margin-top:3mm;justify-content:center;}
+.sig-btn-clear{background:transparent;color:#c00;border:1px solid #fcc;border-radius:4px;padding:5px 14px;font-size:10pt;cursor:pointer;font-family:'Barlow',sans-serif;}
+.sig-accept-hint{font-size:7.5pt;color:#aaa;text-align:center;margin-top:2mm;font-style:italic;}
+
+.lp-footer{margin-top:6mm;text-align:center;font-size:7.5pt;color:#aaa;border-top:1px solid #eee;padding-top:3mm;font-family:'Barlow',sans-serif;}
+
+/* PRINT */
 @media print{
-  body > *:not(#print-portal){display:none!important;}
-  #print-portal{display:block!important;position:fixed;inset:0;background:#fff;z-index:99999;}
-  #print-portal #ticket-content{padding:4mm;font-size:10px;}
-  .ticket-actions{display:none!important;}
+  body>*{display:none!important;}
+  #print-portal{display:block!important;position:fixed;inset:0;background:#fff;z-index:99999;overflow:auto;}
+  #print-portal .letter-page{border:none;padding:15mm 18mm;font-size:10.5pt;}
+  #print-portal .lp-sign-hint,#print-portal .sig-actions,#print-portal .sig-accept-hint{display:none!important;}
 }
 .parse-toast{font-size:11px;font-family:var(--mono);border:1px solid;border-radius:var(--r-sm);padding:6px 12px;display:none;margin-top:8px;}
 
@@ -547,7 +575,7 @@ tr:hover td{background:var(--surface2);}
 
   <div class="btn-row">
     <button class="btn btn-accent" onclick="addRecord()">Guardar registro</button>
-    <button class="btn btn-ticket" onclick="addAndPrint()">🖨 Guardar e imprimir ticket</button>
+    <button class="btn btn-ticket" onclick="addAndPrint()">📄 Guardar y generar contrato</button>
     <button class="btn btn-ghost" onclick="clearForm()">Limpiar</button>
   </div>
   <div class="alert-ok" id="alert-ok">✓ Registro guardado correctamente</div>
@@ -603,15 +631,15 @@ tr:hover td{background:var(--surface2);}
   </div>
 </div>
 
-<!-- Ticket modal -->
-<div class="ticket-modal" id="ticket-modal">
-  <div class="ticket-wrapper">
-    <div class="ticket-actions">
-      <button class="ticket-print-btn" onclick="printTicket()">🖨 Imprimir</button>
-      <button class="ticket-close-btn" onclick="closeTicket()">✕ Cerrar</button>
-    </div>
-    <div id="ticket-content"><!-- generated dynamically --></div>
+<!-- Contract document modal -->
+<div class="contract-modal" id="contract-modal">
+  <div class="contract-topbar">
+    <span class="contract-topbar-title">📄 Contrato de Servicio — ADomicilio</span>
+    <button class="cb cb-clear" onclick="clearSignature()">✕ Borrar firma</button>
+    <button class="cb cb-pdf" onclick="generatePDF()">⬇ Descargar PDF</button>
+    <button class="cb cb-close" onclick="closeContract()">Cerrar</button>
   </div>
+  <div class="letter-page" id="contract-page"><!-- filled dynamically --></div>
 </div>
 
 <!-- hidden print portal -->
@@ -861,7 +889,21 @@ const TIPO_LABEL   = { paquete:'📦 Paquete', sobre:'✉ Sobre', documento:'�
 
 function badge(cls, label) { return `<span class="badge ${cls}">${label}</span>`; }
 
-// ── PHOTOS + OCR ──────────────────────────────────────────────
+// ── PHOTOS + OCR (Tesseract.js — sin API key, corre en navegador) ──
+let tesseractReady = false;
+let Tesseract = null;
+
+function loadTesseract() {
+  return new Promise((resolve, reject) => {
+    if (Tesseract) { resolve(); return; }
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+    s.onload = () => { Tesseract = window.Tesseract; resolve(); };
+    s.onerror = () => reject(new Error('No se pudo cargar Tesseract'));
+    document.head.appendChild(s);
+  });
+}
+
 function triggerCamera(key) {
   document.getElementById('cam-' + key).click();
 }
@@ -869,71 +911,96 @@ function triggerCamera(key) {
 function showOcrStatus(msg, type) {
   const el = document.getElementById('ocr-status');
   const styles = {
-    loading: { color:'var(--amber)', bg:'var(--amber-bg)', border:'rgba(255,194,14,0.25)' },
-    ok:      { color:'var(--green)', bg:'var(--green-bg)', border:'rgba(61,220,132,0.25)' },
-    err:     { color:'var(--red)',   bg:'var(--red-bg)',   border:'rgba(255,95,95,0.25)' }
+    loading: { color:'var(--amber)',  border:'rgba(255,194,14,0.25)',  bg:'rgba(255,194,14,0.08)' },
+    ok:      { color:'var(--green)',  border:'rgba(61,220,132,0.25)',  bg:'rgba(61,220,132,0.08)' },
+    err:     { color:'var(--red)',    border:'rgba(255,95,95,0.25)',   bg:'rgba(255,95,95,0.08)'  }
   };
   const s = styles[type] || styles.loading;
   el.textContent = msg;
-  el.style.color      = s.color;
-  el.style.background = s.bg;
-  el.style.borderColor= s.border;
-  el.style.display    = 'block';
-  if (type !== 'loading') setTimeout(() => el.style.display = 'none', 4000);
+  el.style.color       = s.color;
+  el.style.background  = s.bg;
+  el.style.borderColor = s.border;
+  el.style.display     = 'block';
+  if (type !== 'loading') setTimeout(() => el.style.display = 'none', 5000);
+}
+
+// Extract best name candidate from raw OCR text
+function extractName(raw, isId) {
+  // Normalize: remove junk chars, collapse spaces
+  const lines = raw
+    .split('\n')
+    .map(l => l.replace(/[^a-záéíóúüñA-ZÁÉÍÓÚÜÑ\s]/g, ' ').replace(/\s+/g,' ').trim())
+    .filter(l => l.length > 3);
+
+  if (isId) {
+    // On Mexican INE, the name is usually on a line with 2-4 words, all caps or title case
+    // Look for lines that look like names (letters only, 2-5 words, 5-50 chars)
+    const nameLine = lines.find(l => {
+      const words = l.split(' ').filter(w => w.length > 1);
+      return words.length >= 2 && words.length <= 5 && l.length >= 5 && l.length <= 55
+        && !/INSTITUTO|ELECTORAL|CREDENCIAL|VOTAR|CURP|FECHA|DOMICILIO|ESTADO|MUNICIPIO|SECCIÓN|CLAVE/i.test(l);
+    });
+    return nameLine || lines[0] || '';
+  } else {
+    // On shipping label, destinatario is often after "PARA:", "TO:", "DESTINATARIO:"
+    const paraLine = lines.find(l => /^(PARA|TO|DESTINATARIO|ATTN|A:|DELIVER TO)/i.test(l));
+    if (paraLine) {
+      return paraLine.replace(/^(PARA|TO|DESTINATARIO|ATTN|A:|DELIVER TO)[:\s]*/i,'').trim();
+    }
+    // Otherwise pick longest plausible name line
+    return lines
+      .filter(l => {
+        const w = l.split(' ').filter(x => x.length > 1);
+        return w.length >= 2 && w.length <= 6 && l.length <= 60
+          && !/CALLE|AVE|COL|CP|CIUDAD|ESTADO|MEXICO|ZIP|PHONE|TEL|RFC/i.test(l);
+      })
+      .sort((a,b) => b.length - a.length)[0] || lines[0] || '';
+  }
 }
 
 async function handlePhotoOCR(e, key) {
   const file = e.target.files[0];
   if (!file) return;
 
-  // Show photo preview immediately
   const reader = new FileReader();
   reader.onload = async ev => {
     const dataUrl = ev.target.result;
     photoData[key] = dataUrl;
+
+    // Show preview
     document.getElementById('prev-'+key).src = dataUrl;
     document.getElementById('prev-'+key).style.display = 'block';
     document.getElementById('ph-'+key).style.display = 'none';
     document.getElementById('clr-'+key).style.display = 'flex';
 
-    // OCR via Claude API
-    const base64 = dataUrl.split(',')[1];
-    const isId   = key === 'id';
-    const prompt = isId
-      ? 'Esta es una foto de una identificación oficial mexicana (INE, pasaporte o licencia). Extrae ÚNICAMENTE el nombre completo del titular. Responde SOLO con el nombre, sin explicaciones, sin etiquetas, sin puntos. Si no puedes leerlo, responde: NO_DETECTADO'
-      : 'Esta es una foto de un paquete o guía de envío. Extrae ÚNICAMENTE el nombre completo del destinatario que aparece en la etiqueta. Responde SOLO con el nombre, sin dirección, sin explicaciones. Si no puedes leerlo, responde: NO_DETECTADO';
-
-    showOcrStatus(isId ? '🔍 Leyendo INE…' : '🔍 Leyendo etiqueta…', 'loading');
+    const isId = key === 'id';
+    showOcrStatus('⏳ Cargando motor OCR… (primera vez tarda ~10 seg)', 'loading');
 
     try {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 100,
-          messages: [{
-            role: 'user',
-            content: [
-              { type: 'image', source: { type: 'base64', media_type: file.type || 'image/jpeg', data: base64 } },
-              { type: 'text', text: prompt }
-            ]
-          }]
-        })
+      await loadTesseract();
+      showOcrStatus(isId ? '🔍 Leyendo INE…' : '🔍 Leyendo etiqueta…', 'loading');
+
+      const worker = await Tesseract.createWorker('spa', 1, {
+        workerPath: 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/worker.min.js',
+        corePath:   'https://cdn.jsdelivr.net/npm/tesseract.js-core@5/tesseract-core-simd-lstm.wasm.js',
+        langPath:   'https://cdn.jsdelivr.net/npm/tesseract.js-core@5',
       });
 
-      const data = await res.json();
-      const text = (data.content?.[0]?.text || '').trim();
+      const { data: { text } } = await worker.recognize(dataUrl);
+      await worker.terminate();
 
-      if (!text || text === 'NO_DETECTADO') {
-        showOcrStatus('⚠ No se pudo leer el texto. Escríbelo manualmente.', 'err');
+      const name = extractName(text, isId);
+
+      if (!name) {
+        showOcrStatus('⚠ No se detectó un nombre. Escríbelo manualmente.', 'err');
       } else {
         const field = isId ? 'f-remitente' : 'f-destinatario';
-        document.getElementById(field).value = text;
-        showOcrStatus(`✓ ${isId ? 'Remitente' : 'Destinatario'} detectado: ${text}`, 'ok');
+        document.getElementById(field).value = name;
+        showOcrStatus(`✓ ${isId ? 'Remitente' : 'Destinatario'} detectado: ${name}`, 'ok');
       }
     } catch(err) {
-      showOcrStatus('Sin conexión para OCR. Escríbelo manualmente.', 'err');
+      showOcrStatus('⚠ OCR no disponible. Escribe el nombre manualmente.', 'err');
+      console.warn('OCR error:', err);
     }
   };
   reader.readAsDataURL(file);
@@ -1036,7 +1103,7 @@ function renderTable() {
       <td style="color:var(--text3);font-size:11px;">${r.obs||'—'}</td>
       <td>
         <div style="display:flex;gap:4px;">
-          <button class="del-btn" onclick="reprintTicket(${r.id})" title="Reimprimir ticket" style="color:var(--text2);">🖨</button>
+          <button class="del-btn" onclick="reprintTicket(${r.id})" title="Ver contrato" style="color:var(--text2);">📄</button>
           <button class="del-btn" onclick="deleteRecord(${r.id})">✕</button>
         </div>
       </td>
@@ -1111,110 +1178,236 @@ function closeScanner() {
   document.getElementById('scanner-video').srcObject = null;
 }
 
-// ── TICKET ────────────────────────────────────────────────────
+// ── CONTRACT DOCUMENT ────────────────────────────────────────
 const CENTRO = {
-  nombre:    'Centro de Envíos ADomicilio',
-  direccion: 'Av. Francisco I. Madero 998, Col. 4 Caminos',
-  ciudad:    'Agua Dulce, Veracruz, México',
-  tel:       '923-233-3389',
-  whatsapp:  '923-206-3313',
-  horario:   'Lun–Sáb  10:00 am – 8:00 pm',
+  nombre:      'Centro de Envíos ADomicilio',
+  responsable: 'Alberto Carlo López Ordaz',
+  tipo:        'Persona Física',
+  direccion:   'Av. Francisco I. Madero 998, Col. 4 Caminos',
+  ciudad:      'Agua Dulce, Veracruz, México',
+  tel:         '923-233-3389',
+  whatsapp:    '923-206-3313',
+  horario:     'Lun–Sáb  10:00 am – 8:00 pm',
 };
 
-const ORIGEN_ES  = { propia:'Guía propia', deposito:'Depósito de cliente', devolucion:'Devolución' };
-const TIPO_ES    = { paquete:'Paquete', sobre:'Sobre', documento:'Documento', carga:'Carga' };
-const STATUS_ES  = { pending:'Pendiente', transit:'En tránsito', received:'Recibido', delivered:'Entregado', incident:'Incidencia' };
+const ORIGEN_ES = { propia:'Guía propia', deposito:'Depósito de cliente', devolucion:'Devolución' };
+const TIPO_ES   = { paquete:'Paquete', sobre:'Sobre', documento:'Documento', carga:'Carga' };
+const STATUS_ES = { pending:'Pendiente', transit:'En tránsito', received:'Recibido', delivered:'Entregado', incident:'Incidencia' };
 
-function buildTicketHTML(rec) {
+let sigCanvas = null, sigCtx = null, sigDrawing = false, sigHasContent = false;
+
+function buildContractHTML(rec) {
   const folio = 'AD-' + String(rec.id).slice(-8).toUpperCase();
-  const fecha = new Date(rec.fecha).toLocaleDateString('es-MX', { year:'numeric', month:'long', day:'numeric' });
+  const fecha = new Date(rec.fecha + 'T12:00:00').toLocaleDateString('es-MX', { year:'numeric', month:'long', day:'numeric' });
   const hora  = new Date().toLocaleTimeString('es-MX', { hour:'2-digit', minute:'2-digit' });
+  const ts    = new Date().toLocaleString('es-MX');
 
   return `
-<div class="tk-header">
-  <div class="tk-logo">▶ ADomicilio</div>
-  <div class="tk-sub">CENTRO DE ENVÍOS · INTERMEDIARIO LOGÍSTICO</div>
-  <div class="tk-sub">${CENTRO.direccion}</div>
-  <div class="tk-sub">${CENTRO.ciudad}</div>
-  <div class="tk-sub">Tel: ${CENTRO.tel} · WhatsApp: ${CENTRO.whatsapp}</div>
-  <div class="tk-sub">${CENTRO.horario}</div>
-</div>
-<div class="tk-div-solid"></div>
-
-<div class="tk-folio">${folio}</div>
-<div style="text-align:center;margin-bottom:4px;">
-  <span class="tk-badge">${ORIGEN_ES[rec.origen]||rec.origen}</span>
-  &nbsp;
-  <span class="tk-badge">${TIPO_ES[rec.tipo]||rec.tipo}</span>
-</div>
-<div class="tk-div"></div>
-
-<div class="tk-section-title">📦 Datos del envío</div>
-<div class="tk-row"><span class="tk-label">Paquetería:</span><span class="tk-val">${rec.paq}</span></div>
-<div class="tk-row"><span class="tk-label">Guía:</span><span class="tk-val">${rec.guia}</span></div>
-<div class="tk-row"><span class="tk-label">Fecha:</span><span class="tk-val">${fecha} ${hora}</span></div>
-<div class="tk-row"><span class="tk-label">Estatus:</span><span class="tk-val">${STATUS_ES[rec.status]||rec.status}</span></div>
-${rec.articulo ? `<div class="tk-row"><span class="tk-label">Descripción:</span><span class="tk-val">${rec.articulo}</span></div>` : ''}
-
-<div class="tk-div"></div>
-<div class="tk-section-title">👤 Remitente</div>
-<div class="tk-row"><span class="tk-label">Nombre:</span><span class="tk-val">${rec.remitente||'—'}</span></div>
-${rec.destinatario ? `<div class="tk-row"><span class="tk-label">Destinatario:</span><span class="tk-val">${rec.destinatario}</span></div>` : ''}
-<div class="tk-row"><span class="tk-label">Atendió:</span><span class="tk-val">${rec.recibio||'—'}</span></div>
-${rec.obs ? `<div class="tk-row"><span class="tk-label">Notas:</span><span class="tk-val">${rec.obs}</span></div>` : ''}
-
-<div class="tk-div-solid"></div>
-<div class="tk-section-title">⚖ AVISO LEGAL Y DESLINDE DE RESPONSABILIDADES</div>
-<div class="tk-contract">
-Con fundamento en los artículos <b>1793, 1794, 2025 y relativos del Código Civil Federal</b>, y los artículos <b>75, 80, 81 y 371 del Código de Comercio</b>, al depositar su envío en este centro, el <b>CLIENTE</b> acepta expresamente lo siguiente:
-
-<br><br><b>1. CALIDAD DE INTERMEDIARIO.</b> ADomicilio actúa exclusivamente como intermediario logístico entre el cliente y la paquetería contratada. No somos empresa de transporte ni asumimos responsabilidad sobre el servicio de entrega.
-
-<br><br><b>2. RESPONSABILIDAD DEL CLIENTE.</b> El cliente declara bajo protesta de decir verdad que: (a) la información de remitente y destinatario es correcta y completa; (b) el contenido del paquete es lícito y no está prohibido por la paquetería ni por la legislación mexicana, incluyendo la <b>Ley Aduanera, Ley General de Salud</b> y demás ordenamientos aplicables; (c) el empaque es adecuado para el envío.
-
-<br><br><b>3. EXENCIÓN DE RESPONSABILIDAD.</b> ADomicilio queda expresamente liberado de toda responsabilidad por: pérdida, robo, daño o retraso del paquete atribuible a la paquetería; declaración falsa o incorrecta de contenido; caso fortuito o fuerza mayor; incidencias en ruta ajenas a este centro.
-
-<br><br><b>4. SUJECIÓN A TÉRMINOS DE PAQUETERÍA.</b> El envío está sujeto a los términos, condiciones, rutas, tiempos y políticas propias de <b>${rec.paq}</b>. El cliente reconoce que las reclamaciones por siniestro deben gestionarse directamente ante dicha paquetería.
-
-<br><br><b>5. DATOS PERSONALES.</b> El tratamiento de sus datos se realiza conforme a la <b>Ley Federal de Protección de Datos Personales en Posesión de los Particulares</b> (LFPDPPP), con fines exclusivos de registro del servicio.
+<div class="lp-header">
+  <div class="lp-logo-blk">
+    <div class="lp-brand">ADomicilio</div>
+    <div class="lp-brand-sub">Centro de Envíos · Intermediario Logístico</div>
+    <div style="font-size:7.5pt;color:#888;margin-top:2px;font-family:'Barlow',sans-serif;">Responsable: ${CENTRO.responsable} · ${CENTRO.tipo}</div>
+  </div>
+  <div class="lp-contact">
+    ${CENTRO.direccion}<br>
+    ${CENTRO.ciudad}<br>
+    Tel: ${CENTRO.tel} &nbsp;|&nbsp; WhatsApp: ${CENTRO.whatsapp}<br>
+    ${CENTRO.horario}
+  </div>
 </div>
 
-<div class="tk-firma">
-  <div class="tk-firma-line"></div>
-  <div class="tk-firma-label">FIRMA DEL CLIENTE — Acepto los términos anteriores</div>
-  <div style="margin-top:6px;" class="tk-firma-line"></div>
-  <div class="tk-firma-label">Nombre legible del cliente</div>
+<div class="lp-doc-title">
+  <h1>Contrato de Servicio de Intermediación Logística</h1>
+  <p>Documento con validez legal conforme a la legislación mexicana vigente</p>
 </div>
 
-<div class="tk-div"></div>
-<div class="tk-footer">
-  Folio: ${folio} · ${new Date().toLocaleString('es-MX')}<br>
-  Este comprobante no tiene valor fiscal. Guárdelo para cualquier aclaración.<br>
-  ADomicilio · Centro de Envíos
+<div class="lp-folio-bar">
+  <span><span class="lp-folio-key">Folio: </span><span class="lp-folio-val">${folio}</span></span>
+  <span><span class="lp-folio-key">Fecha: </span><span class="lp-folio-val">${fecha} ${hora}</span></span>
+  <span><span class="lp-folio-key">Tipo: </span><span class="lp-folio-val">${ORIGEN_ES[rec.origen]||rec.origen} · ${TIPO_ES[rec.tipo]||rec.tipo}</span></span>
+</div>
+
+<div class="lp-section">
+  <div class="lp-section-title">I. Datos del Envío</div>
+  <div class="lp-grid">
+    <div class="lp-field"><div class="lp-field-label">Paquetería</div><div class="lp-field-val">${rec.paq}</div></div>
+    <div class="lp-field"><div class="lp-field-label">Número de guía</div><div class="lp-field-val">${rec.guia}</div></div>
+    <div class="lp-field"><div class="lp-field-label">Descripción del contenido</div><div class="lp-field-val">${rec.articulo||'No especificado'}</div></div>
+    <div class="lp-field"><div class="lp-field-label">Estatus al ingreso</div><div class="lp-field-val">${STATUS_ES[rec.status]||rec.status}</div></div>
+    ${rec.obs ? `<div class="lp-field" style="grid-column:1/-1"><div class="lp-field-label">Observaciones</div><div class="lp-field-val">${rec.obs}</div></div>` : ''}
+  </div>
+</div>
+
+<div class="lp-section">
+  <div class="lp-section-title">II. Datos de las Partes</div>
+  <div class="lp-grid">
+    <div class="lp-field"><div class="lp-field-label">Remitente / Cliente</div><div class="lp-field-val">${rec.remitente||'No especificado'}</div></div>
+    <div class="lp-field"><div class="lp-field-label">Destinatario</div><div class="lp-field-val">${rec.destinatario||'No especificado'}</div></div>
+    <div class="lp-field"><div class="lp-field-label">Prestador del servicio</div><div class="lp-field-val">${CENTRO.nombre}</div></div>
+    <div class="lp-field"><div class="lp-field-label">Colaborador que atendió</div><div class="lp-field-val">${rec.recibio||'No especificado'}</div></div>
+  </div>
+</div>
+
+<div class="lp-section">
+  <div class="lp-section-title">III. Términos y Condiciones del Servicio</div>
+  <p style="font-size:9.5pt;color:#555;margin-bottom:3mm;font-family:'Barlow',sans-serif;">
+    En la ciudad de <b>Agua Dulce, Veracruz</b>, siendo el <b>${fecha} a las ${hora} horas</b>, comparecen: por una parte, <b>${CENTRO.nombre}</b>, representado por el C. <b>${CENTRO.responsable}</b>, ${CENTRO.tipo}, con domicilio en ${CENTRO.direccion}, ${CENTRO.ciudad} (en adelante "EL CENTRO"); y por la otra, el cliente identificado como <b>${rec.remitente||'_________________________'}</b> (en adelante "EL CLIENTE"), quienes convienen en celebrar el presente contrato de conformidad con los artículos <b>1793, 1794, 1796 y 2025 del Código Civil Federal</b>, y los artículos <b>75, 80, 81, 85 y 371 del Código de Comercio vigente</b>, al tenor de las siguientes:
+  </p>
+
+  <div class="lp-clause"><span class="lp-clause-num">CLÁUSULA PRIMERA — NATURALEZA DEL SERVICIO.</span> <em>${CENTRO.nombre}</em> actúa exclusivamente como <strong>intermediario logístico</strong> entre el cliente y la empresa de paquetería y mensajería contratada (<strong>${rec.paq}</strong>). El presente centro de envíos no tiene el carácter de empresa transportista, por lo que no asume la custodia, ni la responsabilidad sobre el proceso de traslado, entrega o devolución del paquete, los cuales quedan bajo el control exclusivo de la paquetería seleccionada.</div>
+
+  <div class="lp-clause"><span class="lp-clause-num">CLÁUSULA SEGUNDA — RESPONSABILIDAD DEL CLIENTE.</span> El cliente declara, bajo <strong>protesta de decir verdad</strong> en términos del artículo 1793 del Código Civil Federal, que: (a) toda la información proporcionada sobre remitente y destinatario es verídica, correcta y completa; (b) el contenido del paquete es lícito, no representa riesgo alguno y no se encuentra dentro de los artículos prohibidos por la paquetería ni por la legislación mexicana vigente, incluyendo sin limitar la <strong>Ley Aduanera, Ley General de Salud, Ley Federal de Armas de Fuego y Explosivos</strong> y demás ordenamientos aplicables; (c) el empaque y embalaje es el adecuado para el tipo de envío y protege debidamente el contenido durante el traslado.</div>
+
+  <div class="lp-clause"><span class="lp-clause-num">CLÁUSULA TERCERA — DESLINDE Y EXENCIÓN DE RESPONSABILIDAD.</span> <em>${CENTRO.nombre}</em> queda expresamente liberado, sin responsabilidad administrativa, fiscal ni legal, ante cualquier situación derivada de: pérdida, robo, extravío, daño o retraso del paquete imputable a la paquetería o a terceros; declaración falsa, incorrecta o dolosa del contenido por parte del cliente; caso fortuito, fuerza mayor, contingencias climáticas, sanitarias o cualquier hecho ajeno a la voluntad de este centro; incidencias en la ruta de entrega; así como cualquier irregularidad derivada de la información errónea proporcionada por el cliente.</div>
+
+  <div class="lp-clause"><span class="lp-clause-num">CLÁUSULA CUARTA — SUJECIÓN A POLÍTICAS DE PAQUETERÍA.</span> El servicio de envío está sujeto en su totalidad a los términos, condiciones, rutas, tarifas, tiempos de entrega y políticas operativas propias de <strong>${rec.paq}</strong>. El cliente reconoce que cualquier reclamación por siniestro, extravío o daño deberá gestionarse directamente ante dicha empresa de paquetería, en los términos y plazos que ésta establezca conforme a su reglamento interno y a la <strong>Ley de Caminos, Puentes y Autotransporte Federal</strong> en lo que resulte aplicable.</div>
+
+  <div class="lp-clause"><span class="lp-clause-num">CLÁUSULA QUINTA — PROTECCIÓN DE DATOS PERSONALES.</span> El tratamiento de los datos personales recabados en el presente instrumento se realiza de conformidad con la <strong>Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP)</strong> y su Reglamento, con la única finalidad de gestionar el registro y seguimiento del servicio de intermediación logística contratado. El cliente podrá ejercer sus derechos ARCO contactando al centro en la dirección indicada en este documento.</div>
+
+  <div class="lp-clause"><span class="lp-clause-num">CLÁUSULA SEXTA — ACEPTACIÓN EXPRESA.</span> La entrega física del paquete en las instalaciones de <em>${CENTRO.nombre}</em>, así como la firma del presente documento, constituyen la aceptación plena, expresa e irrevocable de todas las cláusulas aquí contenidas, de conformidad con el artículo 1803 del Código Civil Federal.</div>
+</div>
+
+<div class="lp-sign-section">
+  <div class="lp-sign-title">IV. Firma Digital del Cliente</div>
+  <div class="lp-sign-hint">Al firmar con su dedo o mouse, el cliente manifiesta haber leído y aceptado íntegramente los términos del presente contrato.</div>
+  <canvas id="sig-canvas" width="760" height="120"></canvas>
+  <div class="sig-actions">
+    <button class="sig-btn-clear" onclick="clearSignature()">✕ Borrar y volver a firmar</button>
+  </div>
+  <div class="sig-accept-hint">Firma en el recuadro de arriba con su dedo (celular) o mouse (computadora)</div>
+</div>
+
+<div class="lp-footer">
+  Folio: ${folio} &nbsp;·&nbsp; Generado: ${ts}<br>
+  Este documento no tiene valor fiscal. Consérvelo como comprobante del servicio.<br>
+  <strong>ADomicilio Centro de Envíos</strong> · Responsable: ${CENTRO.responsable} · ${CENTRO.direccion}, ${CENTRO.ciudad}
 </div>`;
 }
 
-function openTicketModal(rec) {
-  document.getElementById('ticket-content').innerHTML = buildTicketHTML(rec);
-  document.getElementById('ticket-modal').classList.add('open');
+function openContract(rec) {
+  document.getElementById('contract-page').innerHTML = buildContractHTML(rec);
+  document.getElementById('contract-modal').classList.add('open');
+  // Init signature pad
+  setTimeout(() => initSigPad(), 100);
 }
 
-function closeTicket() {
-  document.getElementById('ticket-modal').classList.remove('open');
+function closeContract() {
+  document.getElementById('contract-modal').classList.remove('open');
+  sigCanvas = null; sigCtx = null; sigDrawing = false; sigHasContent = false;
 }
 
-function printTicket() {
-  const content = document.getElementById('ticket-content').innerHTML;
-  const portal  = document.getElementById('print-portal');
-  portal.innerHTML = `<div id="ticket-content">${content}</div>`;
-  portal.style.display = 'block';
-  setTimeout(() => {
-    window.print();
-    setTimeout(() => {
-      portal.style.display = 'none';
-      portal.innerHTML = '';
-    }, 800);
-  }, 200);
+// ── SIGNATURE PAD ────────────────────────────────────────────
+function initSigPad() {
+  sigCanvas = document.getElementById('sig-canvas');
+  if (!sigCanvas) return;
+  sigCtx = sigCanvas.getContext('2d');
+  sigCtx.strokeStyle = '#1a3a6b';
+  sigCtx.lineWidth = 2.5;
+  sigCtx.lineCap = 'round';
+  sigCtx.lineJoin = 'round';
+
+  const getPos = (e) => {
+    const r = sigCanvas.getBoundingClientRect();
+    const scaleX = sigCanvas.width / r.width;
+    const scaleY = sigCanvas.height / r.height;
+    const src = e.touches ? e.touches[0] : e;
+    return { x: (src.clientX - r.left) * scaleX, y: (src.clientY - r.top) * scaleY };
+  };
+
+  const start = e => { e.preventDefault(); sigDrawing = true; const p = getPos(e); sigCtx.beginPath(); sigCtx.moveTo(p.x, p.y); };
+  const draw  = e => { e.preventDefault(); if (!sigDrawing) return; const p = getPos(e); sigCtx.lineTo(p.x, p.y); sigCtx.stroke(); sigHasContent = true; sigCanvas.classList.add('signed'); };
+  const stop  = e => { e.preventDefault(); sigDrawing = false; };
+
+  sigCanvas.addEventListener('mousedown', start);
+  sigCanvas.addEventListener('mousemove', draw);
+  sigCanvas.addEventListener('mouseup', stop);
+  sigCanvas.addEventListener('mouseleave', stop);
+  sigCanvas.addEventListener('touchstart', start, { passive: false });
+  sigCanvas.addEventListener('touchmove', draw,  { passive: false });
+  sigCanvas.addEventListener('touchend', stop,   { passive: false });
+}
+
+function clearSignature() {
+  if (!sigCtx || !sigCanvas) return;
+  sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
+  sigHasContent = false;
+  sigCanvas.classList.remove('signed');
+}
+
+// ── PDF GENERATION ───────────────────────────────────────────
+async function generatePDF() {
+  if (!sigHasContent) {
+    if (!confirm('El cliente aún no ha firmado. ¿Desea generar el PDF de todas formas?')) return;
+  }
+
+  // Load html2canvas + jsPDF from CDN
+  await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
+  await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+
+  const page = document.getElementById('contract-page');
+
+  // Temporarily embed signature into the page as an <img> so it renders in html2canvas
+  if (sigCanvas && sigHasContent) {
+    const sigImg = document.createElement('img');
+    sigImg.id = 'sig-embed';
+    sigImg.src = sigCanvas.toDataURL('image/png');
+    sigImg.style.cssText = 'width:100%;height:120px;object-fit:contain;border:1.5px solid #1a3a6b;border-radius:6px;display:block;';
+    sigCanvas.style.display = 'none';
+    sigCanvas.parentNode.insertBefore(sigImg, sigCanvas);
+  }
+
+  // Hide interactive elements during capture
+  document.querySelectorAll('.sig-actions,.lp-sign-hint,.sig-accept-hint').forEach(el => el.style.visibility = 'hidden');
+
+  try {
+    const canvas = await html2canvas(page, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: '#ffffff',
+      logging: false,
+      windowWidth: 820
+    });
+
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation:'portrait', unit:'mm', format:'letter' });
+
+    const imgW = 215.9; // letter width mm
+    const imgH = (canvas.height * imgW) / canvas.width;
+    const pageH = 279.4; // letter height mm
+    let yPos = 0;
+
+    while (yPos < imgH) {
+      if (yPos > 0) pdf.addPage();
+      pdf.addImage(
+        canvas.toDataURL('image/jpeg', 0.95),
+        'JPEG',
+        0, -yPos,
+        imgW, imgH
+      );
+      yPos += pageH;
+    }
+
+    const folio = 'AD-' + String(Date.now()).slice(-8).toUpperCase();
+    pdf.save(`Contrato_ADomicilio_${folio}.pdf`);
+  } finally {
+    // Restore UI
+    const sigEmbed = document.getElementById('sig-embed');
+    if (sigEmbed) sigEmbed.remove();
+    if (sigCanvas) sigCanvas.style.display = 'block';
+    document.querySelectorAll('.sig-actions,.lp-sign-hint,.sig-accept-hint').forEach(el => el.style.visibility = '');
+  }
+}
+
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    if (document.querySelector(`script[src="${src}"]`)) { resolve(); return; }
+    const s = document.createElement('script');
+    s.src = src;
+    s.onload = resolve;
+    s.onerror = reject;
+    document.head.appendChild(s);
+  });
 }
 
 async function addAndPrint() {
@@ -1227,8 +1420,13 @@ async function addAndPrint() {
   a.style.display = 'block';
   setTimeout(() => a.style.display = 'none', 2500);
   try { await syncToSheet(rec); showSyncStatus(true); } catch(e) { showSyncStatus(false); }
-  openTicketModal(rec);
+  openContract(rec);
   clearForm();
+}
+
+function reprintTicket(id) {
+  const rec = records.find(r => r.id === id);
+  if (rec) openContract(rec);
 }
 
 function buildRecord() {
