@@ -266,6 +266,68 @@ tr:hover td{background:var(--surface2);}
 .toast-apply{background:linear-gradient(135deg,#f95f0a,#ffc20e);color:#000;border:none;border-radius:var(--r-sm);padding:7px 18px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--sans);}
 .toast-dismiss{background:transparent;color:var(--text2);border:1px solid var(--border2);border-radius:var(--r-sm);padding:7px 14px;font-size:12px;cursor:pointer;font-family:var(--sans);}
 
+.btn-ticket{background:var(--surface2);color:var(--text);border-color:var(--border2);}
+.btn-ticket:hover{border-color:var(--brand-orange);color:var(--brand-orange);}
+
+/* ── TICKET MODAL ── */
+.ticket-modal{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,0.88);z-index:11000;
+  align-items:center;justify-content:center;padding:1rem;overflow-y:auto;
+}
+.ticket-modal.open{display:flex;}
+.ticket-wrapper{
+  background:#fff;border-radius:var(--r);
+  width:min(380px,100%);position:relative;
+  box-shadow:0 8px 40px rgba(0,0,0,0.6);
+}
+.ticket-actions{
+  display:flex;gap:8px;padding:12px 16px;
+  background:#f5f5f5;border-bottom:1px solid #e0e0e0;
+  border-radius:var(--r) var(--r) 0 0;
+}
+.ticket-print-btn{
+  background:linear-gradient(135deg,#f95f0a,#ffc20e);color:#000;
+  border:none;border-radius:6px;padding:8px 18px;
+  font-size:13px;font-weight:700;cursor:pointer;font-family:var(--sans);
+}
+.ticket-close-btn{
+  background:transparent;color:#666;border:1px solid #ccc;
+  border-radius:6px;padding:8px 14px;font-size:13px;cursor:pointer;font-family:var(--sans);
+  margin-left:auto;
+}
+
+/* ── TICKET CONTENT (what gets printed) ── */
+#ticket-content{
+  font-family:'Courier New',Courier,monospace;
+  font-size:11px;color:#000;background:#fff;
+  padding:16px;line-height:1.45;
+}
+.tk-header{text-align:center;margin-bottom:8px;}
+.tk-logo{font-size:17px;font-weight:900;letter-spacing:1px;}
+.tk-sub{font-size:9px;color:#555;letter-spacing:0.05em;}
+.tk-div{border-top:1px dashed #999;margin:7px 0;}
+.tk-div-solid{border-top:1px solid #000;margin:7px 0;}
+.tk-row{display:flex;justify-content:space-between;gap:4px;margin:2px 0;}
+.tk-label{color:#555;font-size:10px;white-space:nowrap;}
+.tk-val{font-weight:700;text-align:right;font-size:10px;word-break:break-all;}
+.tk-section-title{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#333;margin:6px 0 3px;}
+.tk-folio{text-align:center;font-size:16px;font-weight:900;letter-spacing:2px;margin:6px 0;}
+.tk-badge{display:inline-block;border:1px solid #000;padding:1px 6px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;}
+.tk-contract{font-size:8.5px;color:#333;line-height:1.5;text-align:justify;}
+.tk-contract b{color:#000;}
+.tk-firma{margin-top:10px;border-top:1px solid #999;padding-top:6px;}
+.tk-firma-line{border-top:1px solid #000;margin-top:22px;width:60%;margin-left:auto;margin-right:auto;}
+.tk-firma-label{text-align:center;font-size:8px;color:#555;margin-top:2px;}
+.tk-footer{text-align:center;font-size:8px;color:#888;margin-top:8px;}
+
+/* PRINT STYLES */
+@media print{
+  body > *:not(#print-portal){display:none!important;}
+  #print-portal{display:block!important;position:fixed;inset:0;background:#fff;z-index:99999;}
+  #print-portal #ticket-content{padding:4mm;font-size:10px;}
+  .ticket-actions{display:none!important;}
+}
 .parse-toast{font-size:11px;font-family:var(--mono);border:1px solid;border-radius:var(--r-sm);padding:6px 12px;display:none;margin-top:8px;}
 
 .scanner-modal{
@@ -481,6 +543,7 @@ tr:hover td{background:var(--surface2);}
 
   <div class="btn-row">
     <button class="btn btn-accent" onclick="addRecord()">Guardar registro</button>
+    <button class="btn btn-ticket" onclick="addAndPrint()">🖨 Guardar e imprimir ticket</button>
     <button class="btn btn-ghost" onclick="clearForm()">Limpiar</button>
   </div>
   <div class="alert-ok" id="alert-ok">✓ Registro guardado correctamente</div>
@@ -535,6 +598,20 @@ tr:hover td{background:var(--surface2);}
     </table>
   </div>
 </div>
+
+<!-- Ticket modal -->
+<div class="ticket-modal" id="ticket-modal">
+  <div class="ticket-wrapper">
+    <div class="ticket-actions">
+      <button class="ticket-print-btn" onclick="printTicket()">🖨 Imprimir</button>
+      <button class="ticket-close-btn" onclick="closeTicket()">✕ Cerrar</button>
+    </div>
+    <div id="ticket-content"><!-- generated dynamically --></div>
+  </div>
+</div>
+
+<!-- hidden print portal -->
+<div id="print-portal" style="display:none;"></div>
 
 <!-- Scanner -->
 <div class="scanner-modal" id="scanner-modal">
@@ -822,36 +899,14 @@ function today() { return new Date().toISOString().split('T')[0]; }
 async function addRecord() {
   const guia = document.getElementById('f-guia').value.trim();
   if (!guia) { alert('Ingresa o escanea el número de guía'); return; }
-  const rec = {
-    id: Date.now(),
-    origen: currentOrigin,
-    tipo: currentTipo,
-    codigo: document.getElementById('f-codigo').value.trim(),
-    guia,
-    paq: document.getElementById('f-paq').value,
-    status: document.getElementById('f-status').value,
-    fecha: document.getElementById('f-fecha').value || today(),
-    remitente: document.getElementById('f-remitente').value.trim(),
-    destinatario: document.getElementById('f-destinatario').value.trim(),
-    articulo: document.getElementById('f-articulo').value.trim(),
-    recibio: document.getElementById('f-recibio').value.trim(),
-    obs: document.getElementById('f-obs').value.trim(),
-    photoId: photoData.id,
-    photoPkg: photoData.pkg
-  };
+  const rec = buildRecord();
   records.unshift(rec);
   save(); updateStats();
   clearForm();
   const a = document.getElementById('alert-ok');
   a.style.display = 'block';
   setTimeout(() => a.style.display = 'none', 2500);
-  // Sync to Google Sheets
-  try {
-    await syncToSheet(rec);
-    showSyncStatus(true);
-  } catch(e) {
-    showSyncStatus(false);
-  }
+  try { await syncToSheet(rec); showSyncStatus(true); } catch(e) { showSyncStatus(false); }
 }
 
 function clearForm() {
@@ -861,6 +916,11 @@ function clearForm() {
   document.getElementById('f-paq').value = 'FedEx';
   setOrigin('propia'); setTipo('paquete'); onPaqChange();
   ['id','pkg'].forEach(k => clearPhoto({stopPropagation:()=>{},preventDefault:()=>{}}, k));
+}
+
+function reprintTicket(id) {
+  const rec = records.find(r => r.id === id);
+  if (rec) openTicketModal(rec);
 }
 
 // ── STATS ─────────────────────────────────────────────────────
@@ -905,7 +965,12 @@ function renderTable() {
       <td class="mono-sm" style="color:var(--text3)">${r.fecha}</td>
       <td><div class="photos-cell">${thumbHTML(r.photoId,'ID',r.guia)}${thumbHTML(r.photoPkg,'Paquete',r.guia)}</div></td>
       <td style="color:var(--text3);font-size:11px;">${r.obs||'—'}</td>
-      <td><button class="del-btn" onclick="deleteRecord(${r.id})">✕</button></td>
+      <td>
+        <div style="display:flex;gap:4px;">
+          <button class="del-btn" onclick="reprintTicket(${r.id})" title="Reimprimir ticket" style="color:var(--text2);">🖨</button>
+          <button class="del-btn" onclick="deleteRecord(${r.id})">✕</button>
+        </div>
+      </td>
     </tr>`;
   }).join('');
 }
@@ -977,7 +1042,142 @@ function closeScanner() {
   document.getElementById('scanner-video').srcObject = null;
 }
 
-// ── AUTO-UPDATE ───────────────────────────────────────────────
+// ── TICKET ────────────────────────────────────────────────────
+const CENTRO = {
+  nombre:    'ADomicilio Centro de Envíos',
+  direccion: 'Coatzacoalcos, Veracruz, México',
+  tel:       '(921) 000-0000',
+  email:     'contacto@adomicilio.mx',
+  rfc:       'N/A — Persona Física / Intermediario'
+};
+
+const ORIGEN_ES  = { propia:'Guía propia', deposito:'Depósito de cliente', devolucion:'Devolución' };
+const TIPO_ES    = { paquete:'Paquete', sobre:'Sobre', documento:'Documento', carga:'Carga' };
+const STATUS_ES  = { pending:'Pendiente', transit:'En tránsito', received:'Recibido', delivered:'Entregado', incident:'Incidencia' };
+
+function buildTicketHTML(rec) {
+  const folio = 'AD-' + String(rec.id).slice(-8).toUpperCase();
+  const fecha = new Date(rec.fecha).toLocaleDateString('es-MX', { year:'numeric', month:'long', day:'numeric' });
+  const hora  = new Date().toLocaleTimeString('es-MX', { hour:'2-digit', minute:'2-digit' });
+
+  return `
+<div class="tk-header">
+  <div class="tk-logo">▶ ADomicilio</div>
+  <div class="tk-sub">CENTRO DE ENVÍOS · INTERMEDIARIO LOGÍSTICO</div>
+  <div class="tk-sub">${CENTRO.direccion}</div>
+  <div class="tk-sub">Tel: ${CENTRO.tel} · ${CENTRO.email}</div>
+</div>
+<div class="tk-div-solid"></div>
+
+<div class="tk-folio">${folio}</div>
+<div style="text-align:center;margin-bottom:4px;">
+  <span class="tk-badge">${ORIGEN_ES[rec.origen]||rec.origen}</span>
+  &nbsp;
+  <span class="tk-badge">${TIPO_ES[rec.tipo]||rec.tipo}</span>
+</div>
+<div class="tk-div"></div>
+
+<div class="tk-section-title">📦 Datos del envío</div>
+<div class="tk-row"><span class="tk-label">Paquetería:</span><span class="tk-val">${rec.paq}</span></div>
+<div class="tk-row"><span class="tk-label">Guía:</span><span class="tk-val">${rec.guia}</span></div>
+<div class="tk-row"><span class="tk-label">Fecha:</span><span class="tk-val">${fecha} ${hora}</span></div>
+<div class="tk-row"><span class="tk-label">Estatus:</span><span class="tk-val">${STATUS_ES[rec.status]||rec.status}</span></div>
+${rec.articulo ? `<div class="tk-row"><span class="tk-label">Descripción:</span><span class="tk-val">${rec.articulo}</span></div>` : ''}
+
+<div class="tk-div"></div>
+<div class="tk-section-title">👤 Remitente</div>
+<div class="tk-row"><span class="tk-label">Nombre:</span><span class="tk-val">${rec.remitente||'—'}</span></div>
+${rec.destinatario ? `<div class="tk-row"><span class="tk-label">Destinatario:</span><span class="tk-val">${rec.destinatario}</span></div>` : ''}
+<div class="tk-row"><span class="tk-label">Atendió:</span><span class="tk-val">${rec.recibio||'—'}</span></div>
+${rec.obs ? `<div class="tk-row"><span class="tk-label">Notas:</span><span class="tk-val">${rec.obs}</span></div>` : ''}
+
+<div class="tk-div-solid"></div>
+<div class="tk-section-title">⚖ AVISO LEGAL Y DESLINDE DE RESPONSABILIDADES</div>
+<div class="tk-contract">
+Con fundamento en los artículos <b>1793, 1794, 2025 y relativos del Código Civil Federal</b>, y los artículos <b>75, 80, 81 y 371 del Código de Comercio</b>, al depositar su envío en este centro, el <b>CLIENTE</b> acepta expresamente lo siguiente:
+
+<br><br><b>1. CALIDAD DE INTERMEDIARIO.</b> ADomicilio actúa exclusivamente como intermediario logístico entre el cliente y la paquetería contratada. No somos empresa de transporte ni asumimos responsabilidad sobre el servicio de entrega.
+
+<br><br><b>2. RESPONSABILIDAD DEL CLIENTE.</b> El cliente declara bajo protesta de decir verdad que: (a) la información de remitente y destinatario es correcta y completa; (b) el contenido del paquete es lícito y no está prohibido por la paquetería ni por la legislación mexicana, incluyendo la <b>Ley Aduanera, Ley General de Salud</b> y demás ordenamientos aplicables; (c) el empaque es adecuado para el envío.
+
+<br><br><b>3. EXENCIÓN DE RESPONSABILIDAD.</b> ADomicilio queda expresamente liberado de toda responsabilidad por: pérdida, robo, daño o retraso del paquete atribuible a la paquetería; declaración falsa o incorrecta de contenido; caso fortuito o fuerza mayor; incidencias en ruta ajenas a este centro.
+
+<br><br><b>4. SUJECIÓN A TÉRMINOS DE PAQUETERÍA.</b> El envío está sujeto a los términos, condiciones, rutas, tiempos y políticas propias de <b>${rec.paq}</b>. El cliente reconoce que las reclamaciones por siniestro deben gestionarse directamente ante dicha paquetería.
+
+<br><br><b>5. DATOS PERSONALES.</b> El tratamiento de sus datos se realiza conforme a la <b>Ley Federal de Protección de Datos Personales en Posesión de los Particulares</b> (LFPDPPP), con fines exclusivos de registro del servicio.
+</div>
+
+<div class="tk-firma">
+  <div class="tk-firma-line"></div>
+  <div class="tk-firma-label">FIRMA DEL CLIENTE — Acepto los términos anteriores</div>
+  <div style="margin-top:6px;" class="tk-firma-line"></div>
+  <div class="tk-firma-label">Nombre legible del cliente</div>
+</div>
+
+<div class="tk-div"></div>
+<div class="tk-footer">
+  Folio: ${folio} · ${new Date().toLocaleString('es-MX')}<br>
+  Este comprobante no tiene valor fiscal. Guárdelo para cualquier aclaración.<br>
+  ADomicilio · Centro de Envíos
+</div>`;
+}
+
+function openTicketModal(rec) {
+  document.getElementById('ticket-content').innerHTML = buildTicketHTML(rec);
+  document.getElementById('ticket-modal').classList.add('open');
+}
+
+function closeTicket() {
+  document.getElementById('ticket-modal').classList.remove('open');
+}
+
+function printTicket() {
+  const content = document.getElementById('ticket-content').innerHTML;
+  const portal  = document.getElementById('print-portal');
+  portal.innerHTML = `<div id="ticket-content">${content}</div>`;
+  portal.style.display = 'block';
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => {
+      portal.style.display = 'none';
+      portal.innerHTML = '';
+    }, 800);
+  }, 200);
+}
+
+async function addAndPrint() {
+  const guia = document.getElementById('f-guia').value.trim();
+  if (!guia) { alert('Ingresa o escanea el número de guía'); return; }
+  const rec = buildRecord();
+  records.unshift(rec);
+  save(); updateStats();
+  const a = document.getElementById('alert-ok');
+  a.style.display = 'block';
+  setTimeout(() => a.style.display = 'none', 2500);
+  try { await syncToSheet(rec); showSyncStatus(true); } catch(e) { showSyncStatus(false); }
+  openTicketModal(rec);
+  clearForm();
+}
+
+function buildRecord() {
+  return {
+    id: Date.now(),
+    origen: currentOrigin,
+    tipo: currentTipo,
+    codigo: document.getElementById('f-codigo').value.trim(),
+    guia: document.getElementById('f-guia').value.trim(),
+    paq: document.getElementById('f-paq').value,
+    status: document.getElementById('f-status').value,
+    fecha: document.getElementById('f-fecha').value || today(),
+    remitente: document.getElementById('f-remitente').value.trim(),
+    destinatario: document.getElementById('f-destinatario').value.trim(),
+    articulo: document.getElementById('f-articulo').value.trim(),
+    recibio: document.getElementById('f-recibio').value.trim(),
+    obs: document.getElementById('f-obs').value.trim(),
+    photoId: photoData.id,
+    photoPkg: photoData.pkg
+  };
+}
 const GITHUB_RAW = 'https://raw.githubusercontent.com/albertollopez92-dev/bitacora-envios/main/index.html';
 const VERSION_KEY = 'bitacora_version';
 let pendingUpdate = null;
