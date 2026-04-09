@@ -511,28 +511,32 @@ tr:hover td{background:var(--surface2);}
 
   <div class="card">
     <div class="card-header">Evidencia fotográfica</div>
+
+    <!-- OCR status bar -->
+    <div id="ocr-status" style="display:none;font-size:11px;font-family:var(--mono);padding:7px 12px;border-radius:var(--r-sm);margin-bottom:10px;border:1px solid;"></div>
+
     <div class="photo-row">
       <div>
-        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;font-family:var(--mono);margin-bottom:6px;">Identificación oficial</div>
-        <div class="photo-zone" id="zone-id">
-          <input type="file" accept="image/*" onchange="handlePhoto(event,'id')">
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;font-family:var(--mono);margin-bottom:6px;">Identificación oficial → Remitente</div>
+        <div class="photo-zone" id="zone-id" onclick="triggerCamera('id')">
+          <input type="file" accept="image/*" capture="environment" id="cam-id" style="display:none" onchange="handlePhotoOCR(event,'id')">
           <div class="photo-ph" id="ph-id">
-            <div class="photo-ph-icon">🪪</div>
-            <div class="photo-ph-label">INE / Pasaporte</div>
-            <div class="photo-ph-sub">Toca o arrastra</div>
+            <div class="photo-ph-icon">📸</div>
+            <div class="photo-ph-label">Fotografiar INE</div>
+            <div class="photo-ph-sub">Toca para abrir cámara<br>Se leerá el nombre automáticamente</div>
           </div>
           <img class="photo-preview" id="prev-id" alt="ID">
           <button class="photo-clear" id="clr-id" onclick="clearPhoto(event,'id')">✕</button>
         </div>
       </div>
       <div>
-        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;font-family:var(--mono);margin-bottom:6px;">Paquete con guía</div>
-        <div class="photo-zone" id="zone-pkg">
-          <input type="file" accept="image/*" onchange="handlePhoto(event,'pkg')">
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;font-family:var(--mono);margin-bottom:6px;">Paquete con guía → Destinatario</div>
+        <div class="photo-zone" id="zone-pkg" onclick="triggerCamera('pkg')">
+          <input type="file" accept="image/*" capture="environment" id="cam-pkg" style="display:none" onchange="handlePhotoOCR(event,'pkg')">
           <div class="photo-ph" id="ph-pkg">
-            <div class="photo-ph-icon">📦</div>
-            <div class="photo-ph-label">Foto del paquete</div>
-            <div class="photo-ph-sub">Etiqueta visible</div>
+            <div class="photo-ph-icon">📸</div>
+            <div class="photo-ph-label">Fotografiar paquete</div>
+            <div class="photo-ph-sub">Toca para abrir cámara<br>Se leerá el destinatario automáticamente</div>
           </div>
           <img class="photo-preview" id="prev-pkg" alt="Paquete">
           <button class="photo-clear" id="clr-pkg" onclick="clearPhoto(event,'pkg')">✕</button>
@@ -857,16 +861,80 @@ const TIPO_LABEL   = { paquete:'📦 Paquete', sobre:'✉ Sobre', documento:'�
 
 function badge(cls, label) { return `<span class="badge ${cls}">${label}</span>`; }
 
-// ── PHOTOS ────────────────────────────────────────────────────
-function handlePhoto(e, key) {
-  const file = e.target.files[0]; if (!file) return;
+// ── PHOTOS + OCR ──────────────────────────────────────────────
+function triggerCamera(key) {
+  document.getElementById('cam-' + key).click();
+}
+
+function showOcrStatus(msg, type) {
+  const el = document.getElementById('ocr-status');
+  const styles = {
+    loading: { color:'var(--amber)', bg:'var(--amber-bg)', border:'rgba(255,194,14,0.25)' },
+    ok:      { color:'var(--green)', bg:'var(--green-bg)', border:'rgba(61,220,132,0.25)' },
+    err:     { color:'var(--red)',   bg:'var(--red-bg)',   border:'rgba(255,95,95,0.25)' }
+  };
+  const s = styles[type] || styles.loading;
+  el.textContent = msg;
+  el.style.color      = s.color;
+  el.style.background = s.bg;
+  el.style.borderColor= s.border;
+  el.style.display    = 'block';
+  if (type !== 'loading') setTimeout(() => el.style.display = 'none', 4000);
+}
+
+async function handlePhotoOCR(e, key) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  // Show photo preview immediately
   const reader = new FileReader();
-  reader.onload = ev => {
-    photoData[key] = ev.target.result;
-    document.getElementById('prev-'+key).src = ev.target.result;
+  reader.onload = async ev => {
+    const dataUrl = ev.target.result;
+    photoData[key] = dataUrl;
+    document.getElementById('prev-'+key).src = dataUrl;
     document.getElementById('prev-'+key).style.display = 'block';
     document.getElementById('ph-'+key).style.display = 'none';
     document.getElementById('clr-'+key).style.display = 'flex';
+
+    // OCR via Claude API
+    const base64 = dataUrl.split(',')[1];
+    const isId   = key === 'id';
+    const prompt = isId
+      ? 'Esta es una foto de una identificación oficial mexicana (INE, pasaporte o licencia). Extrae ÚNICAMENTE el nombre completo del titular. Responde SOLO con el nombre, sin explicaciones, sin etiquetas, sin puntos. Si no puedes leerlo, responde: NO_DETECTADO'
+      : 'Esta es una foto de un paquete o guía de envío. Extrae ÚNICAMENTE el nombre completo del destinatario que aparece en la etiqueta. Responde SOLO con el nombre, sin dirección, sin explicaciones. Si no puedes leerlo, responde: NO_DETECTADO';
+
+    showOcrStatus(isId ? '🔍 Leyendo INE…' : '🔍 Leyendo etiqueta…', 'loading');
+
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 100,
+          messages: [{
+            role: 'user',
+            content: [
+              { type: 'image', source: { type: 'base64', media_type: file.type || 'image/jpeg', data: base64 } },
+              { type: 'text', text: prompt }
+            ]
+          }]
+        })
+      });
+
+      const data = await res.json();
+      const text = (data.content?.[0]?.text || '').trim();
+
+      if (!text || text === 'NO_DETECTADO') {
+        showOcrStatus('⚠ No se pudo leer el texto. Escríbelo manualmente.', 'err');
+      } else {
+        const field = isId ? 'f-remitente' : 'f-destinatario';
+        document.getElementById(field).value = text;
+        showOcrStatus(`✓ ${isId ? 'Remitente' : 'Destinatario'} detectado: ${text}`, 'ok');
+      }
+    } catch(err) {
+      showOcrStatus('Sin conexión para OCR. Escríbelo manualmente.', 'err');
+    }
   };
   reader.readAsDataURL(file);
 }
@@ -878,7 +946,8 @@ function clearPhoto(e, key) {
   document.getElementById('prev-'+key).style.display = 'none';
   document.getElementById('ph-'+key).style.display = 'flex';
   document.getElementById('clr-'+key).style.display = 'none';
-  document.getElementById('zone-'+key).querySelector('input[type=file]').value = '';
+  const inp = document.getElementById('cam-'+key);
+  if (inp) inp.value = '';
 }
 
 function openLightbox(src, cap) {
@@ -1044,11 +1113,12 @@ function closeScanner() {
 
 // ── TICKET ────────────────────────────────────────────────────
 const CENTRO = {
-  nombre:    'ADomicilio Centro de Envíos',
-  direccion: 'Coatzacoalcos, Veracruz, México',
-  tel:       '(921) 000-0000',
-  email:     'contacto@adomicilio.mx',
-  rfc:       'N/A — Persona Física / Intermediario'
+  nombre:    'Centro de Envíos ADomicilio',
+  direccion: 'Av. Francisco I. Madero 998, Col. 4 Caminos',
+  ciudad:    'Agua Dulce, Veracruz, México',
+  tel:       '923-233-3389',
+  whatsapp:  '923-206-3313',
+  horario:   'Lun–Sáb  10:00 am – 8:00 pm',
 };
 
 const ORIGEN_ES  = { propia:'Guía propia', deposito:'Depósito de cliente', devolucion:'Devolución' };
@@ -1065,7 +1135,9 @@ function buildTicketHTML(rec) {
   <div class="tk-logo">▶ ADomicilio</div>
   <div class="tk-sub">CENTRO DE ENVÍOS · INTERMEDIARIO LOGÍSTICO</div>
   <div class="tk-sub">${CENTRO.direccion}</div>
-  <div class="tk-sub">Tel: ${CENTRO.tel} · ${CENTRO.email}</div>
+  <div class="tk-sub">${CENTRO.ciudad}</div>
+  <div class="tk-sub">Tel: ${CENTRO.tel} · WhatsApp: ${CENTRO.whatsapp}</div>
+  <div class="tk-sub">${CENTRO.horario}</div>
 </div>
 <div class="tk-div-solid"></div>
 
