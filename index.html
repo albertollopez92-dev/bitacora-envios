@@ -76,19 +76,58 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:14
 .logo-sub{font-size:10px;color:rgba(255,255,255,0.45);letter-spacing:0.08em;text-transform:uppercase;font-family:var(--mono);}
 .header-right{margin-left:auto;display:flex;gap:8px;}
 
-/* ── TABS ── */
-.tabs{display:flex;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto;}
-.tab{
-  padding:10px 18px;font-size:12px;font-weight:500;color:var(--text2);
+/* ── PAGES NAV ── */
+.pages-nav{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:0;display:flex;overflow-x:auto;position:sticky;top:57px;z-index:99;
+}
+.page-tab{
+  padding:11px 20px;font-size:11px;font-weight:500;color:var(--text3);
   cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;
   transition:color 0.15s,border-color 0.15s;font-family:var(--mono);
+  letter-spacing:0.04em;display:flex;align-items:center;gap:6px;
+}
+.page-tab:hover{color:var(--text);}
+.page-tab.active{color:var(--brand-orange);border-bottom-color:var(--brand-orange);}
+.page-tab .tab-num{
+  width:18px;height:18px;border-radius:50%;background:var(--surface3);
+  font-size:9px;display:flex;align-items:center;justify-content:center;
+  font-weight:700;flex-shrink:0;
+}
+.page-tab.active .tab-num{background:var(--brand-orange);color:#000;}
+.page-tab.done .tab-num{background:var(--green);color:#000;}
+
+/* ── PAGE CONTENT ── */
+.page{display:none;padding:1.25rem;max-width:700px;margin:0 auto;animation:slideIn 0.2s ease;}
+.page.active{display:block;}
+@keyframes slideIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+.page-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;font-family:var(--condensed);letter-spacing:0.3px;}
+.page-sub{font-size:11px;color:var(--text3);margin-bottom:1rem;font-family:var(--mono);}
+
+/* ── NAV BUTTONS ── */
+.nav-row{display:flex;gap:8px;margin-top:1.25rem;padding-bottom:2rem;}
+.btn-next{
+  flex:1;padding:13px;background:linear-gradient(135deg,#f95f0a,#ffc20e);
+  color:#000;border:none;border-radius:var(--r);font-size:13px;font-weight:700;
+  cursor:pointer;transition:opacity 0.15s,transform 0.1s;font-family:var(--sans);
   letter-spacing:0.02em;
 }
-.tab:hover{color:var(--text);}
-.tab.active{color:var(--brand-orange);border-bottom-color:var(--brand-orange);}
+.btn-next:active{transform:scale(0.98);}
+.btn-next:hover{opacity:0.9;}
+.btn-next.secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border2);}
+.btn-prev{
+  padding:13px 18px;background:transparent;color:var(--text2);
+  border:1px solid var(--border2);border-radius:var(--r);font-size:13px;
+  cursor:pointer;font-family:var(--sans);transition:all 0.15s;
+}
+.btn-prev:hover{color:var(--text);border-color:var(--text2);}
 
-/* ── CONTENT ── */
-.content{padding:1.25rem;max-width:900px;margin:0 auto;}
+/* ── BITACORA PAGE (full width) ── */
+.page-bitacora{display:none;padding:1.25rem;max-width:1100px;margin:0 auto;}
+.page-bitacora.active{display:block;}
+#page-4{display:none;}
+#page-4.active{display:block;}
 
 /* ── STATS ── */
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1.25rem;}
@@ -409,17 +448,11 @@ tr:hover td{background:var(--surface2);}
       <div class="logo-sub">Bitácora de Envíos</div>
     </div>
   </div>
-  <div class="header-right">
-    <button class="update-btn" id="update-btn" onclick="checkForUpdate()" title="Verificar actualización">
-      <span id="update-icon">↻</span>
-      <span id="update-label">Actualizar</span>
-    </button>
-  </div>
 </div>
 <!-- brand speed stripe -->
 <div style="height:3px;background:linear-gradient(90deg,#f95f0a 0%,#ffc20e 60%,transparent 100%);"></div>
 
-<!-- Update toast -->
+<!-- Update toast (auto, sin botón manual) -->
 <div class="update-toast" id="update-toast">
   <div class="update-toast-title">✦ Nueva versión disponible</div>
   <div style="color:var(--text2);font-size:11px;">Se actualizará automáticamente.<br>Tus datos no se perderán.</div>
@@ -434,8 +467,24 @@ tr:hover td{background:var(--surface2);}
   <div class="tab" onclick="switchTab('bitacora',this)">Bitácora</div>
 </div>
 
-<!-- ══ TAB: REGISTRO ══════════════════════════════════════════ -->
-<div id="tab-registro" class="content">
+<!-- ══ PAGES NAV ══════════════════════════════════════════════ -->
+<div class="pages-nav">
+  <div class="page-tab active" id="nav-1" onclick="goPage(1)">
+    <span class="tab-num">1</span> Operación
+  </div>
+  <div class="page-tab" id="nav-2" onclick="goPage(2)">
+    <span class="tab-num">2</span> Datos
+  </div>
+  <div class="page-tab" id="nav-3" onclick="goPage(3)">
+    <span class="tab-num">3</span> Evidencia
+  </div>
+  <div class="page-tab" id="nav-4" onclick="goPage(4)">
+    <span class="tab-num">4</span> Bitácora
+  </div>
+</div>
+
+<!-- ══ PÁGINA 1: OPERACIÓN ════════════════════════════════════ -->
+<div class="page active" id="page-1">
 
   <!-- Stats -->
   <div class="stats">
@@ -445,19 +494,20 @@ tr:hover td{background:var(--surface2);}
     <div class="stat"><div class="stat-val" id="s-devoluciones" style="color:var(--purple)">0</div><div class="stat-label">Devoluciones</div></div>
   </div>
 
-  <div class="card">
-    <div class="card-header">Tipo de operación</div>
+  <div class="page-title">Tipo de operación</div>
+  <div class="page-sub">Selecciona el origen y tipo de envío</div>
 
-    <!-- Origen -->
-    <div class="field" style="margin-bottom:6px;"><label>Origen de la guía</label></div>
+  <div class="card">
+    <div class="card-header">Origen de la guía</div>
     <div class="origin-toggle">
       <button class="origin-btn active-propia" data-origin="propia" onclick="setOrigin('propia')">✦ Guía propia</button>
       <button class="origin-btn" data-origin="deposito" onclick="setOrigin('deposito')">⬇ Depósito cliente</button>
       <button class="origin-btn" data-origin="devolucion" onclick="setOrigin('devolucion')">↩ Devolución</button>
     </div>
+  </div>
 
-    <!-- Tipo de paquete -->
-    <div class="field" style="margin-bottom:6px;"><label>Tipo de envío</label></div>
+  <div class="card">
+    <div class="card-header">Tipo de envío</div>
     <div class="tipo-toggle">
       <button class="tipo-btn active" data-tipo="paquete" onclick="setTipo('paquete')">📦 Paquete</button>
       <button class="tipo-btn" data-tipo="sobre" onclick="setTipo('sobre')">✉ Sobre</button>
@@ -468,7 +518,6 @@ tr:hover td{background:var(--surface2);}
 
   <div class="card">
     <div class="card-header">Guía y paquetería</div>
-
     <div class="g2">
       <div class="field">
         <label>Código completo / escanear</label>
@@ -483,7 +532,6 @@ tr:hover td{background:var(--surface2);}
         <input type="text" id="f-guia" placeholder="Se extrae automático" class="mono-sm" maxlength="30">
       </div>
     </div>
-
     <div class="g3">
       <div class="field">
         <label>Paquetería</label>
@@ -511,37 +559,40 @@ tr:hover td{background:var(--surface2);}
     </div>
   </div>
 
+  <div class="nav-row">
+    <button class="btn-next" onclick="goPage(2)">Continuar → Datos del cliente</button>
+  </div>
+</div>
+
+<!-- ══ PÁGINA 2: DATOS ════════════════════════════════════════ -->
+<div class="page" id="page-2">
+  <div class="page-title">Datos del envío</div>
+  <div class="page-sub">Información del remitente y destinatario</div>
+
   <div class="card">
-    <div class="card-header">📸 Escanear guía con cámara</div>
-    <div id="ocr-status" style="display:none;font-size:11px;font-family:var(--mono);padding:7px 12px;border-radius:var(--r-sm);margin-bottom:10px;border:1px solid;"></div>
-    <div class="photo-zone" id="zone-guide-scan" onclick="triggerCamera('guide')" style="min-height:120px;margin-bottom:0;">
-      <input type="file" accept="image/*" capture="environment" id="cam-guide" style="display:none" onchange="handleGuidePhoto(event)">
-      <div class="photo-ph" id="ph-guide">
-        <div class="photo-ph-icon">📷</div>
-        <div class="photo-ph-label">Fotografiar etiqueta / guía</div>
-        <div class="photo-ph-sub">Se leerán los datos automáticamente</div>
+    <div class="card-header">Remitente / cliente</div>
+    <div class="g2">
+      <div class="field">
+        <label>Nombre completo</label>
+        <input type="text" id="f-remitente" placeholder="Nombre completo">
       </div>
-      <img class="photo-preview" id="prev-guide" alt="Guía" style="min-height:120px;">
-      <button class="photo-clear" id="clr-guide" onclick="clearGuidePhoto(event)">✕</button>
+      <div class="field">
+        <label>WhatsApp del remitente</label>
+        <input type="tel" id="f-wa" placeholder="52 923 000 0000" oninput="this.value=this.value.replace(/[^0-9+\s]/g,'')">
+      </div>
+    </div>
+    <div class="field">
+      <label>Destinatario</label>
+      <input type="text" id="f-destinatario" placeholder="Nombre completo">
     </div>
   </div>
 
   <div class="card">
-    <div class="card-header">Datos del envío</div>
+    <div class="card-header">Detalles del paquete</div>
     <div class="g2">
       <div class="field">
-        <label>Remitente / cliente</label>
-        <input type="text" id="f-remitente" placeholder="Nombre completo">
-      </div>
-      <div class="field">
-        <label>Destinatario</label>
-        <input type="text" id="f-destinatario" placeholder="Nombre completo">
-      </div>
-    </div>
-    <div class="g2">
-      <div class="field">
-        <label>Descripción del paquete</label>
-        <input type="text" id="f-articulo" placeholder="Ej. Zapatos talla 28, electrónico...">
+        <label>Descripción del contenido</label>
+        <input type="text" id="f-articulo" placeholder="Ej. Zapatos, electrónico...">
       </div>
       <div class="field">
         <label>Recibió en centro</label>
@@ -554,36 +605,51 @@ tr:hover td{background:var(--surface2);}
     </div>
   </div>
 
+  <div class="nav-row">
+    <button class="btn-prev" onclick="goPage(1)">← Atrás</button>
+    <button class="btn-next" onclick="goPage(3)">Continuar → Evidencia</button>
+  </div>
+</div>
+
+<!-- ══ PÁGINA 3: EVIDENCIA + ACCIONES ════════════════════════ -->
+<div class="page" id="page-3">
+  <div class="page-title">Evidencia fotográfica</div>
+  <div class="page-sub">Foto del paquete con etiqueta visible</div>
+
   <div class="card">
-    <div class="card-header">Evidencia fotográfica</div>
-    <div class="photo-row" style="grid-template-columns:1fr;">
-      <div>
-        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;font-family:var(--mono);margin-bottom:6px;">Foto del paquete con guía visible</div>
-        <div class="photo-zone" id="zone-pkg" onclick="triggerCamera('pkg')">
-          <input type="file" accept="image/*" capture="environment" id="cam-pkg" style="display:none" onchange="handlePhotoOCR(event,'pkg')">
-          <div class="photo-ph" id="ph-pkg">
-            <div class="photo-ph-icon">📦</div>
-            <div class="photo-ph-label">Fotografiar paquete</div>
-            <div class="photo-ph-sub">Etiqueta visible — evidencia del envío</div>
-          </div>
-          <img class="photo-preview" id="prev-pkg" alt="Paquete">
-          <button class="photo-clear" id="clr-pkg" onclick="clearPhoto(event,'pkg')">✕</button>
-        </div>
+    <div id="ocr-status" style="display:none;font-size:11px;font-family:var(--mono);padding:7px 12px;border-radius:var(--r-sm);margin-bottom:10px;border:1px solid;"></div>
+    <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;font-family:var(--mono);margin-bottom:8px;">Foto del paquete con guía visible</div>
+    <div class="photo-zone" id="zone-pkg" onclick="triggerCamera('pkg')">
+      <input type="file" accept="image/*" capture="environment" id="cam-pkg" style="display:none" onchange="handlePhotoEvidence(event)">
+      <div class="photo-ph" id="ph-pkg">
+        <div class="photo-ph-icon">📦</div>
+        <div class="photo-ph-label">Fotografiar paquete</div>
+        <div class="photo-ph-sub">Asegúrate que la etiqueta sea visible</div>
       </div>
+      <img class="photo-preview" id="prev-pkg" alt="Paquete">
+      <button class="photo-clear" id="clr-pkg" onclick="clearPhoto(event,'pkg')">✕</button>
     </div>
   </div>
 
-  <div class="btn-row">
-    <button class="btn btn-accent" onclick="addRecord()">Guardar registro</button>
-    <button class="btn btn-ticket" onclick="addAndPrint()">📄 Guardar y generar contrato</button>
-    <button class="btn btn-ghost" onclick="clearForm()">Limpiar</button>
+  <div class="card">
+    <div class="card-header">Acciones</div>
+    <div class="btn-row" style="margin-top:0;">
+      <button class="btn btn-accent" onclick="addRecord()">✓ Guardar registro</button>
+      <button class="btn btn-ticket" onclick="addAndPrint()">📄 Guardar y generar contrato</button>
+      <button class="btn btn-ghost" onclick="clearForm()">Limpiar</button>
+    </div>
+    <div class="alert-ok" id="alert-ok">✓ Registro guardado correctamente</div>
+    <div id="sync-status" style="font-size:11px;font-family:var(--mono);margin-top:6px;display:none;"></div>
   </div>
-  <div class="alert-ok" id="alert-ok">✓ Registro guardado correctamente</div>
-  <div id="sync-status" style="font-size:11px;font-family:var(--mono);margin-top:6px;display:none;"></div>
+
+  <div class="nav-row">
+    <button class="btn-prev" onclick="goPage(2)">← Atrás</button>
+    <button class="btn-next secondary" onclick="goPage(4)">Ver Bitácora →</button>
+  </div>
 </div>
 
-<!-- ══ TAB: BITÁCORA ════════════════════════════════════════════ -->
-<div id="tab-bitacora" class="content" style="display:none;">
+<!-- ══ PÁGINA 4: BITÁCORA ════════════════════════════════════ -->
+<div class="page-bitacora" id="page-4">
   <div class="filter-bar">
     <input type="text" id="search" placeholder="Buscar guía, remitente, colaborador..." oninput="renderTable()">
     <select id="fil-origen" onchange="renderTable()">
@@ -708,13 +774,39 @@ function showSyncStatus(ok) {
   setTimeout(() => el.style.display = 'none', 3500);
 }
 
-// ── TABS ──────────────────────────────────────────────────────
-function switchTab(tab, el) {
-  document.getElementById('tab-registro').style.display = tab === 'registro' ? '' : 'none';
-  document.getElementById('tab-bitacora').style.display = tab === 'bitacora' ? '' : 'none';
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  if (tab === 'bitacora') renderTable();
+// ── PAGE NAVIGATION ───────────────────────────────────────────
+let currentPageNum = 1;
+
+function goPage(n) {
+  // Hide all pages
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const bit = document.getElementById('page-4');
+  if (bit) bit.classList.remove('active');
+
+  // Update nav tabs
+  for (let i = 1; i <= 4; i++) {
+    const nav = document.getElementById('nav-' + i);
+    if (!nav) continue;
+    nav.classList.remove('active','done');
+    if (i === n) nav.classList.add('active');
+    else if (i < n) nav.classList.add('done');
+  }
+
+  // Show target page
+  if (n === 4) {
+    document.getElementById('page-4').classList.add('active');
+    renderTable();
+  } else {
+    document.getElementById('page-' + n).classList.add('active');
+  }
+
+  currentPageNum = n;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Keep backward compat
+function switchTab(tab) {
+  goPage(tab === 'bitacora' ? 4 : 1);
 }
 
 // ── ORIGIN & TIPO TOGGLES ──────────────────────────────────────
@@ -892,45 +984,34 @@ const TIPO_LABEL   = { paquete:'📦 Paquete', sobre:'✉ Sobre', documento:'�
 
 function badge(cls, label) { return `<span class="badge ${cls}">${label}</span>`; }
 
-// ── PHOTOS + OCR ──────────────────────────────────────────────
-let tesseractReady = false;
-let Tesseract = null;
-
-function loadTesseract() {
-  return new Promise((resolve, reject) => {
-    if (Tesseract) { resolve(); return; }
-    const s = document.createElement('script');
-    s.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
-    s.onload = () => { Tesseract = window.Tesseract; resolve(); };
-    s.onerror = () => reject(new Error('No se pudo cargar Tesseract'));
-    document.head.appendChild(s);
-  });
-}
-
+// ── EVIDENCE PHOTO (sin OCR — solo evidencia) ─────────────────
 function triggerCamera(key) {
-  const id = key === 'guide' ? 'cam-guide' : 'cam-' + key;
-  document.getElementById(id).click();
+  document.getElementById('cam-' + key).click();
 }
 
-function showOcrStatus(msg, type) {
-  const el = document.getElementById('ocr-status');
-  const styles = {
-    loading: { color:'var(--amber)',  border:'rgba(255,194,14,0.25)',  bg:'rgba(255,194,14,0.08)' },
-    ok:      { color:'var(--green)',  border:'rgba(61,220,132,0.25)',  bg:'rgba(61,220,132,0.08)' },
-    err:     { color:'var(--red)',    border:'rgba(255,95,95,0.25)',   bg:'rgba(255,95,95,0.08)'  }
+function handlePhotoEvidence(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const dataUrl = ev.target.result;
+    photoData.pkg = dataUrl;
+    document.getElementById('prev-pkg').src = dataUrl;
+    document.getElementById('prev-pkg').style.display = 'block';
+    document.getElementById('ph-pkg').style.display = 'none';
+    document.getElementById('clr-pkg').style.display = 'flex';
+    focusNextEmpty();
   };
-  const s = styles[type] || styles.loading;
-  el.textContent = msg;
-  el.style.color       = s.color;
-  el.style.background  = s.bg;
-  el.style.borderColor = s.border;
-  el.style.display     = 'block';
-  if (type !== 'loading') setTimeout(() => el.style.display = 'none', 5000);
+  reader.readAsDataURL(file);
 }
+
+// Kept for compatibility
+function handlePhotoOCR(e, key) { handlePhotoEvidence(e); }
+function handleGuidePhoto(e)     { handlePhotoEvidence(e); }
+function clearGuidePhoto(e)      { clearPhoto(e, 'guide'); }
 
 // ── FOCUS NEXT EMPTY FIELD ────────────────────────────────────
 function focusNextEmpty() {
-  const fields = ['f-codigo','f-guia','f-remitente','f-destinatario','f-articulo','f-recibio'];
+  const fields = ['f-codigo','f-guia','f-remitente','f-wa','f-destinatario','f-articulo','f-recibio'];
   for (const id of fields) {
     const el = document.getElementById(id);
     if (el && !el.value.trim()) {
@@ -940,80 +1021,10 @@ function focusNextEmpty() {
   }
 }
 
-// ── GUIDE PHOTO → reads barcode/label → fills form ────────────
-async function handleGuidePhoto(e) {
-  const file = e.target.files[0]; if (!file) return;
-  const reader = new FileReader();
-  reader.onload = async ev => {
-    const dataUrl = ev.target.result;
-    photoData.guide = dataUrl;
-    document.getElementById('prev-guide').src = dataUrl;
-    document.getElementById('prev-guide').style.display = 'block';
-    document.getElementById('ph-guide').style.display = 'none';
-    document.getElementById('clr-guide').style.display = 'flex';
-    showOcrStatus('⏳ Leyendo etiqueta… (primera vez tarda ~10 seg)', 'loading');
-    try {
-      await loadTesseract();
-      showOcrStatus('🔍 Analizando guía y datos…', 'loading');
-      const worker = await Tesseract.createWorker('spa', 1, {
-        workerPath: 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/worker.min.js',
-        corePath:   'https://cdn.jsdelivr.net/npm/tesseract.js-core@5/tesseract-core-simd-lstm.wasm.js',
-        langPath:   'https://cdn.jsdelivr.net/npm/tesseract.js-core@5',
-      });
-      const { data: { text } } = await worker.recognize(dataUrl);
-      await worker.terminate();
-      // Extract barcode numbers
-      const nums = (text.match(/\d{10,34}/g) || []);
-      let detected = [];
-      if (nums.length) {
-        document.getElementById('f-codigo').value = nums[0];
-        autoExtract();
-        detected.push('código');
-      }
-      // Extract name for remitente
-      const lines = text.split('\n').map(l=>l.replace(/[^a-záéíóúüñA-ZÁÉÍÓÚÜÑ\s]/g,' ').replace(/\s+/,' ').trim()).filter(l=>l.length>4);
-      const nameLine = lines.find(l=>{ const w=l.split(' ').filter(x=>x.length>1); return w.length>=2&&w.length<=5&&l.length<=55&&!/FEDEX|DHL|ESTAFETA|MERCADO|PAQUETE|GUIA|ENVIO|RASTREO|TRACKING/i.test(l); });
-      if (nameLine && !document.getElementById('f-remitente').value) {
-        document.getElementById('f-remitente').value = nameLine;
-        detected.push('remitente');
-      }
-      if (detected.length) {
-        showOcrStatus('✓ Detectado: ' + detected.join(', '), 'ok');
-      } else {
-        showOcrStatus('⚠ No se detectaron datos. Verifica la foto o escríbelos.', 'err');
-      }
-      focusNextEmpty();
-    } catch(err) {
-      showOcrStatus('⚠ OCR no disponible. Ingresa datos manualmente.', 'err');
-      focusNextEmpty();
-    }
-  };
-  reader.readAsDataURL(file);
-}
-
-function clearGuidePhoto(e) {
-  e.stopPropagation(); e.preventDefault();
-  photoData.guide = null;
-  document.getElementById('prev-guide').src = '';
-  document.getElementById('prev-guide').style.display = 'none';
-  document.getElementById('ph-guide').style.display = 'flex';
-  document.getElementById('clr-guide').style.display = 'none';
-  document.getElementById('cam-guide').value = '';
-}
-
-async function handlePhotoOCR(e, key) {
-  const file = e.target.files[0]; if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    const dataUrl = ev.target.result;
-    photoData[key] = dataUrl;
-    document.getElementById('prev-'+key).src = dataUrl;
-    document.getElementById('prev-'+key).style.display = 'block';
-    document.getElementById('ph-'+key).style.display = 'none';
-    document.getElementById('clr-'+key).style.display = 'flex';
-    focusNextEmpty();
-  };
-  reader.readAsDataURL(file);
+function showOcrStatus(msg, type) {
+  const el = document.getElementById('ocr-status');
+  if (!el) return;
+  el.style.display = 'none'; // No OCR — keep hidden
 }
 
 function clearPhoto(e, key) {
@@ -1056,7 +1067,9 @@ async function addRecord() {
 }
 
 function clearForm() {
-  ['f-codigo','f-guia','f-remitente','f-destinatario','f-articulo','f-recibio','f-obs'].forEach(id => document.getElementById(id).value = '');
+  ['f-codigo','f-guia','f-remitente','f-wa','f-destinatario','f-articulo','f-recibio','f-obs'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
   document.getElementById('f-fecha').value = today();
   document.getElementById('f-status').value = 'pending';
   document.getElementById('f-paq').value = 'FedEx';
@@ -1243,6 +1256,18 @@ function buildContractHTML(rec) {
   <div class="lp-grid">
     <div class="lp-field"><div class="lp-field-label">Paquetería</div><div class="lp-field-val">${rec.paq}</div></div>
     <div class="lp-field"><div class="lp-field-label">Número de guía</div><div class="lp-field-val">${rec.guia} &nbsp;<a href="${getUrl(rec.paq,rec.guia)}" target="_blank" style="font-size:8pt;color:#1a3a6b;text-decoration:none;border:1px solid #1a3a6b;padding:1px 6px;border-radius:3px;">📍 Rastrear envío ↗</a></div></div>
+    <div class="lp-field" style="grid-column:1/-1;">
+      <div class="lp-field-label">Código QR — Rastreo del envío</div>
+      <div style="display:flex;align-items:center;gap:12px;margin-top:3px;">
+        <div id="contract-qr-zone" style="width:72px;height:72px;border:1px solid #dde;border-radius:4px;display:flex;align-items:center;justify-content:center;background:#fafafa;flex-shrink:0;">
+          <span style="font-size:8pt;color:#aaa;text-align:center;">QR<br>cargando…</span>
+        </div>
+        <div style="font-size:7.5pt;color:#555;line-height:1.6;">
+          Escanea para rastrear tu envío en tiempo real.<br>
+          <span style="font-family:monospace;font-size:7pt;color:#888;word-break:break-all;">${getUrl(rec.paq,rec.guia)}</span>
+        </div>
+      </div>
+    </div>
     <div class="lp-field"><div class="lp-field-label">Descripción del contenido</div><div class="lp-field-val">${rec.articulo||'No especificado'}</div></div>
     <div class="lp-field"><div class="lp-field-label">Estatus al ingreso</div><div class="lp-field-val">${STATUS_ES[rec.status]||rec.status}</div></div>
     ${rec.obs ? `<div class="lp-field" style="grid-column:1/-1"><div class="lp-field-label">Observaciones</div><div class="lp-field-val">${rec.obs}</div></div>` : ''}
@@ -1253,6 +1278,7 @@ function buildContractHTML(rec) {
   <div class="lp-section-title">II. Datos de las Partes</div>
   <div class="lp-grid">
     <div class="lp-field"><div class="lp-field-label">Remitente / Cliente</div><div class="lp-field-val">${rec.remitente||'No especificado'}</div></div>
+    <div class="lp-field"><div class="lp-field-label">WhatsApp del remitente</div><div class="lp-field-val">${rec.wa ? '+'+rec.wa : 'No registrado'}</div></div>
     <div class="lp-field"><div class="lp-field-label">Destinatario</div><div class="lp-field-val">${rec.destinatario||'No especificado'}</div></div>
     <div class="lp-field"><div class="lp-field-label">Prestador del servicio</div><div class="lp-field-val">${CENTRO.nombre}</div></div>
     <div class="lp-field"><div class="lp-field-label">Colaborador que atendió</div><div class="lp-field-val">${rec.recibio||'No especificado'}</div></div>
@@ -1298,20 +1324,74 @@ function buildContractHTML(rec) {
 function openContract(rec) {
   document.getElementById('contract-page').innerHTML = buildContractHTML(rec);
   document.getElementById('contract-modal').classList.add('open');
-  setTimeout(() => initSigPad(), 100);
+  setTimeout(() => {
+    initSigPad();
+    // Generate QR code for tracking URL
+    generateQR(getUrl(rec.paq, rec.guia));
+  }, 120);
 }
 
-// Auto-save to Drive when PDF is downloaded
+async function generateQR(url) {
+  const zone = document.getElementById('contract-qr-zone');
+  if (!zone) return;
+  // Load QRCode.js library
+  if (!window.QRCode) {
+    await new Promise((res, rej) => {
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+      s.onload = res; s.onerror = rej;
+      document.head.appendChild(s);
+    });
+  }
+  zone.innerHTML = '';
+  zone.style.padding = '4px';
+  try {
+    new QRCode(zone, {
+      text: url,
+      width: 64,
+      height: 64,
+      colorDark: '#1a3a6b',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  } catch(e) {
+    zone.innerHTML = '<span style="font-size:7pt;color:#aaa;text-align:center;">QR no disponible</span>';
+  }
+}
+
+// Auto-save to Drive when PDF is downloaded + send WA to client
 async function generatePDFAndAutoSave() {
   await generatePDF();
+
+  // Send WhatsApp to remitente if WA number available
+  const folio = document.querySelector('.lp-folio-val')?.textContent || '';
+  const paq   = document.querySelector('.lp-folio-key + .lp-folio-val')?.textContent || '';
+
+  // Get WA from contract page data attrs or stored record
+  const waEl = document.querySelector('.lp-field-val');
+  // Find wa from current open record via folio
+  const rec = records.find(r => ('AD-' + String(r.id).slice(-8).toUpperCase()) === folio);
+  if (rec && rec.wa) {
+    const waNum = rec.wa.replace(/\D/g,'');
+    const waLink = `https://wa.me/${waNum}?text=${encodeURIComponent(
+      `📦 *ADomicilio — Comprobante de envío*\n\n` +
+      `Hola ${rec.remitente || ''}, te compartimos el comprobante de tu envío.\n\n` +
+      `🔖 *Folio:* ${folio}\n` +
+      `📮 *Paquetería:* ${rec.paq}\n` +
+      `🔢 *Guía:* ${rec.guia}\n` +
+      `📍 *Rastrear:* ${(CARRIERS[rec.paq]||CARRIERS.FedEx).url(rec.guia)}\n\n` +
+      `El PDF de tu contrato fue generado y guardado. Cualquier duda estamos a tus órdenes.\n\n` +
+      `_ADomicilio · Centro de Envíos · Agua Dulce, Ver._`
+    )}`;
+    setTimeout(() => window.open(waLink, '_blank'), 1500);
+  }
+
   // Auto upload to Drive in background
-  if (driveToken || true) {
-    driveStatus('☁ Guardando automáticamente en Drive…');
-    try {
-      await saveAllToDrive();
-    } catch(e) {
-      driveStatus('⚠ No se pudo guardar en Drive. Descarga manual disponible.', '#ffb347');
-    }
+  driveStatus('☁ Guardando automáticamente en Drive…');
+  try {
+    await saveAllToDrive();
+  } catch(e) {
+    driveStatus('⚠ No se pudo guardar en Drive.', '#ffb347');
   }
 }
 
@@ -1678,6 +1758,7 @@ function buildRecord() {
     status: document.getElementById('f-status').value,
     fecha: document.getElementById('f-fecha').value || today(),
     remitente: document.getElementById('f-remitente').value.trim(),
+    wa: document.getElementById('f-wa').value.trim().replace(/\D/g,''),
     destinatario: document.getElementById('f-destinatario').value.trim(),
     articulo: document.getElementById('f-articulo').value.trim(),
     recibio: document.getElementById('f-recibio').value.trim(),
@@ -1703,51 +1784,17 @@ function getContentHash(html) {
 }
 
 async function checkForUpdate() {
-  const btn = document.getElementById('update-btn');
-  const icon = document.getElementById('update-icon');
-  const label = document.getElementById('update-label');
-
-  btn.classList.add('checking');
-  icon.style.display = 'inline-block';
-  icon.style.animation = 'spin 1s linear infinite';
-  label.textContent = 'Verificando…';
-
-  // Add spin animation dynamically
-  if (!document.getElementById('spin-style')) {
-    const s = document.createElement('style');
-    s.id = 'spin-style';
-    s.textContent = '@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}';
-    document.head.appendChild(s);
-  }
-
   try {
     const res = await fetch(GITHUB_RAW + '?t=' + Date.now());
     if (!res.ok) throw new Error('No se pudo conectar');
     const remoteHTML = await res.text();
     const remoteHash = getContentHash(remoteHTML);
     const localHash  = localStorage.getItem(VERSION_KEY) || getContentHash(document.documentElement.outerHTML);
-
-    btn.classList.remove('checking');
-    icon.style.animation = '';
-
     if (remoteHash !== localHash) {
       pendingUpdate = remoteHTML;
-      btn.classList.add('has-update');
-      icon.textContent = '✦';
-      label.textContent = 'Nueva versión';
       document.getElementById('update-toast').classList.add('show');
-    } else {
-      icon.textContent = '✓';
-      label.textContent = 'Al día';
-      setTimeout(() => { icon.textContent = '↻'; label.textContent = 'Actualizar'; }, 3000);
     }
-  } catch(e) {
-    btn.classList.remove('checking');
-    icon.style.animation = '';
-    icon.textContent = '✕';
-    label.textContent = 'Sin conexión';
-    setTimeout(() => { icon.textContent = '↻'; label.textContent = 'Actualizar'; }, 3000);
-  }
+  } catch(e) {}
 }
 
 function applyUpdate() {
@@ -1794,8 +1841,10 @@ async function silentUpdateCheck() {
 document.getElementById('f-fecha').value = today();
 onPaqChange();
 updateStats();
-// Check for updates in background after 2 seconds
-setTimeout(silentUpdateCheck, 2000);
+renderTable();
+goPage(1);
+// Auto-check for updates on load (once per day)
+setTimeout(silentUpdateCheck, 1500);
 </script>
 </body>
 </html>
