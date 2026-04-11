@@ -1359,39 +1359,44 @@ async function generateQR(url) {
   }
 }
 
-// Auto-save to Drive when PDF is downloaded + send WA to client
+// Auto-save to Drive → get PDF link → send WA to client with link
 async function generatePDFAndAutoSave() {
   await generatePDF();
 
-  // Send WhatsApp to remitente if WA number available
   const folio = document.querySelector('.lp-folio-val')?.textContent || '';
-  const paq   = document.querySelector('.lp-folio-key + .lp-folio-val')?.textContent || '';
+  const rec   = records.find(r => ('AD-' + String(r.id).slice(-8).toUpperCase()) === folio);
 
-  // Get WA from contract page data attrs or stored record
-  const waEl = document.querySelector('.lp-field-val');
-  // Find wa from current open record via folio
-  const rec = records.find(r => ('AD-' + String(r.id).slice(-8).toUpperCase()) === folio);
-  if (rec && rec.wa) {
-    const waNum = rec.wa.replace(/\D/g,'');
-    const waLink = `https://wa.me/${waNum}?text=${encodeURIComponent(
-      `📦 *ADomicilio — Comprobante de envío*\n\n` +
-      `Hola ${rec.remitente || ''}, te compartimos el comprobante de tu envío.\n\n` +
-      `🔖 *Folio:* ${folio}\n` +
-      `📮 *Paquetería:* ${rec.paq}\n` +
-      `🔢 *Guía:* ${rec.guia}\n` +
-      `📍 *Rastrear:* ${(CARRIERS[rec.paq]||CARRIERS.FedEx).url(rec.guia)}\n\n` +
-      `El PDF de tu contrato fue generado y guardado. Cualquier duda estamos a tus órdenes.\n\n` +
-      `_ADomicilio · Centro de Envíos · Agua Dulce, Ver._`
-    )}`;
-    setTimeout(() => window.open(waLink, '_blank'), 1500);
+  // Upload to Drive and get the public PDF link
+  driveStatus('☁ Subiendo contrato a Google Drive…');
+  let pdfLink = null;
+  try {
+    pdfLink = await saveAllToDrive();
+  } catch(e) {
+    driveStatus('⚠ No se pudo subir a Drive.', '#ffb347');
   }
 
-  // Auto upload to Drive in background
-  driveStatus('☁ Guardando automáticamente en Drive…');
-  try {
-    await saveAllToDrive();
-  } catch(e) {
-    driveStatus('⚠ No se pudo guardar en Drive.', '#ffb347');
+  // Send WhatsApp to client with PDF link
+  if (rec && rec.wa) {
+    const waNum    = rec.wa.replace(/\D/g,'');
+    const trackUrl = (CARRIERS[rec.paq] || CARRIERS.FedEx).url(rec.guia);
+
+    const msg =
+      `📦 *ADomicilio — Comprobante de envío*\n\n` +
+      `Hola ${rec.remitente || 'cliente'}, tu envío ha sido registrado.\n\n` +
+      `🔖 *Folio:* ${folio}\n` +
+      `📮 *Paquetería:* ${rec.paq}\n` +
+      `🔢 *Guía:* ${rec.guia}\n\n` +
+      (pdfLink
+        ? `📄 *Descarga tu contrato aquí:*\n${pdfLink}\n\n`
+        : '') +
+      `📍 *Rastrear tu envío en tiempo real:*\n${trackUrl}\n\n` +
+      `Cualquier duda estamos a tus órdenes. ¡Gracias por tu preferencia!\n` +
+      `📞 923-233-3389 | 🕐 Lun–Sáb 10am–8pm\n` +
+      `_Centro de Envíos ADomicilio · Agua Dulce, Veracruz_`;
+
+    setTimeout(() => {
+      window.open(`https://wa.me/${waNum}?text=${encodeURIComponent(msg)}`, '_blank');
+    }, 1500);
   }
 }
 
@@ -1531,7 +1536,7 @@ function loadScript(src) {
 
 // ── GOOGLE DRIVE UPLOAD ───────────────────────────────────────
 const DRIVE_CLIENT_ID = '846227033446-9lvfkj0274eg7mvvss80uj6oi8tq72k0.apps.googleusercontent.com';
-const DRIVE_SCOPE     = 'https://www.googleapis.com/auth/drive.file';
+const DRIVE_SCOPE     = 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.permissions';
 const FOLDER_NAME     = 'ADomicilio — Contratos';
 let driveToken        = null;
 let driveFolderId     = null;
@@ -1662,7 +1667,7 @@ async function saveAllToDrive() {
   }
 
   const btn = document.getElementById('drive-btn');
-  btn.disabled = true;
+  if (btn) btn.disabled = true;
   driveStatus('🔐 Conectando con Google Drive…');
 
   try {
@@ -1674,21 +1679,31 @@ async function saveAllToDrive() {
     const ts    = new Date().toISOString().slice(0,10);
     const base  = `${folio}_${ts}`;
 
-    let uploaded = 0;
-    let linkDrive = `https://drive.google.com/drive/folders/${folderId}`;
+    let uploaded  = 0;
+    let pdfLink   = `https://drive.google.com/drive/folders/${folderId}`;
 
     // 1. Upload PDF
     driveStatus('📄 Subiendo contrato PDF…');
     const pdfBlob = await buildPDFBlob();
     const pdfFile = await uploadFileToDrive(token, folderId, `${base}_contrato.pdf`, 'application/pdf', pdfBlob);
-    if (pdfFile.webViewLink) linkDrive = pdfFile.webViewLink;
     uploaded++;
 
-    // 2. Upload ID photo if exists
-    if (photoData.id) {
-      driveStatus('🪪 Subiendo foto de identificación…');
-      await uploadFileToDrive(token, folderId, `${base}_identificacion.jpg`, 'image/jpeg', photoData.id);
-      uploaded++;
+    // 2. Make PDF publicly readable so client can open the link
+    if (pdfFile.id) {
+      try {
+        await fetch(`https://www.googleapis.com/drive/v3/files/${pdfFile.id}/permissions`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ role: 'reader', type: 'anyone' })
+        });
+        // Use direct preview link (works without Google account)
+        pdfLink = `https://drive.google.com/file/d/${pdfFile.id}/view?usp=sharing`;
+      } catch(e) {
+        if (pdfFile.webViewLink) pdfLink = pdfFile.webViewLink;
+      }
     }
 
     // 3. Upload package photo if exists
@@ -1700,9 +1715,8 @@ async function saveAllToDrive() {
 
     // 4. Log to Sheets — Contratos tab
     driveStatus('📊 Registrando en Google Sheets…');
-    const remitente = document.querySelector('.lp-field-val')?.textContent || '';
-    const guia      = document.querySelector('.lp-folio-val')?.textContent || '';
     try {
+      const rec = records.find(r => ('AD-' + String(r.id).slice(-8).toUpperCase()) === folio);
       await fetch(SHEET_URL, {
         method: 'POST', mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
@@ -1710,21 +1724,26 @@ async function saveAllToDrive() {
           tipo: 'contrato_drive',
           folio, timestamp: new Date().toLocaleString('es-MX'),
           archivoPDF: true,
-          fotoId: !!photoData.id,
           fotoPkg: !!photoData.pkg,
-          linkDrive, remitente, guia
+          linkDrive: pdfLink,
+          remitente: rec?.remitente || '',
+          guia: rec?.guia || ''
         })
       });
     } catch(e) {}
 
-    driveStatus(`✅ ${uploaded} archivo(s) guardados en Drive → carpeta "${FOLDER_NAME}"`, '#4dff91');
+    driveStatus(`✅ ${uploaded} archivo(s) guardados en Drive`, '#4dff91');
     setTimeout(() => driveStatus(''), 6000);
+
+    // Return the PDF link so generatePDFAndAutoSave can use it
+    return pdfLink;
 
   } catch(err) {
     console.error(err);
     driveStatus('❌ Error al subir a Drive. Verifica permisos e intenta de nuevo.', '#ff5f5f');
+    return null;
   } finally {
-    btn.disabled = false;
+    if (btn) btn.disabled = false;
   }
 }
 
