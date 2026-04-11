@@ -512,6 +512,21 @@ tr:hover td{background:var(--surface2);}
   </div>
 
   <div class="card">
+    <div class="card-header">📸 Escanear guía con cámara</div>
+    <div id="ocr-status" style="display:none;font-size:11px;font-family:var(--mono);padding:7px 12px;border-radius:var(--r-sm);margin-bottom:10px;border:1px solid;"></div>
+    <div class="photo-zone" id="zone-guide-scan" onclick="triggerCamera('guide')" style="min-height:120px;margin-bottom:0;">
+      <input type="file" accept="image/*" capture="environment" id="cam-guide" style="display:none" onchange="handleGuidePhoto(event)">
+      <div class="photo-ph" id="ph-guide">
+        <div class="photo-ph-icon">📷</div>
+        <div class="photo-ph-label">Fotografiar etiqueta / guía</div>
+        <div class="photo-ph-sub">Se leerán los datos automáticamente</div>
+      </div>
+      <img class="photo-preview" id="prev-guide" alt="Guía" style="min-height:120px;">
+      <button class="photo-clear" id="clr-guide" onclick="clearGuidePhoto(event)">✕</button>
+    </div>
+  </div>
+
+  <div class="card">
     <div class="card-header">Datos del envío</div>
     <div class="g2">
       <div class="field">
@@ -541,32 +556,15 @@ tr:hover td{background:var(--surface2);}
 
   <div class="card">
     <div class="card-header">Evidencia fotográfica</div>
-
-    <!-- OCR status bar -->
-    <div id="ocr-status" style="display:none;font-size:11px;font-family:var(--mono);padding:7px 12px;border-radius:var(--r-sm);margin-bottom:10px;border:1px solid;"></div>
-
-    <div class="photo-row">
+    <div class="photo-row" style="grid-template-columns:1fr;">
       <div>
-        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;font-family:var(--mono);margin-bottom:6px;">Identificación oficial → Remitente</div>
-        <div class="photo-zone" id="zone-id" onclick="triggerCamera('id')">
-          <input type="file" accept="image/*" capture="environment" id="cam-id" style="display:none" onchange="handlePhotoOCR(event,'id')">
-          <div class="photo-ph" id="ph-id">
-            <div class="photo-ph-icon">📸</div>
-            <div class="photo-ph-label">Fotografiar INE</div>
-            <div class="photo-ph-sub">Toca para abrir cámara<br>Se leerá el nombre automáticamente</div>
-          </div>
-          <img class="photo-preview" id="prev-id" alt="ID">
-          <button class="photo-clear" id="clr-id" onclick="clearPhoto(event,'id')">✕</button>
-        </div>
-      </div>
-      <div>
-        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;font-family:var(--mono);margin-bottom:6px;">Paquete con guía → Destinatario</div>
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;font-family:var(--mono);margin-bottom:6px;">Foto del paquete con guía visible</div>
         <div class="photo-zone" id="zone-pkg" onclick="triggerCamera('pkg')">
           <input type="file" accept="image/*" capture="environment" id="cam-pkg" style="display:none" onchange="handlePhotoOCR(event,'pkg')">
           <div class="photo-ph" id="ph-pkg">
-            <div class="photo-ph-icon">📸</div>
+            <div class="photo-ph-icon">📦</div>
             <div class="photo-ph-label">Fotografiar paquete</div>
-            <div class="photo-ph-sub">Toca para abrir cámara<br>Se leerá el destinatario automáticamente</div>
+            <div class="photo-ph-sub">Etiqueta visible — evidencia del envío</div>
           </div>
           <img class="photo-preview" id="prev-pkg" alt="Paquete">
           <button class="photo-clear" id="clr-pkg" onclick="clearPhoto(event,'pkg')">✕</button>
@@ -638,11 +636,7 @@ tr:hover td{background:var(--surface2);}
   <div class="contract-topbar">
     <span class="contract-topbar-title">📄 Contrato de Servicio — ADomicilio</span>
     <button class="cb cb-clear" onclick="clearSignature()">✕ Borrar firma</button>
-    <button class="cb cb-pdf" onclick="generatePDF()">⬇ Descargar PDF</button>
-    <button class="cb cb-drive" id="drive-btn" onclick="saveAllToDrive()">
-      <svg width="14" height="14" viewBox="0 0 87.3 78" style="vertical-align:middle;margin-right:5px"><path d="M6.6 66.85l3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3L28.7 53H0c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/><path d="M43.65 25L28.7 0C27.35.8 26.2 1.9 25.4 3.3L1.2 45.5C.4 46.9 0 48.45 0 50h28.7z" fill="#00ac47"/><path d="M73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5H58.6l6.1 11.5z" fill="#ea4335"/><path d="M43.65 25L58.6 0H29.7z" fill="#00832d"/><path d="M58.6 53H28.7L43.65 78l14.95-25z" fill="#2684fc"/><path d="M73.4 26.5L49.2 3.3c-.8-1.4-1.95-2.5-3.3-3.3H29.7L58.6 50h28.7c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/></svg>
-      Guardar en Drive
-    </button>
+    <button class="cb cb-pdf" onclick="generatePDFAndAutoSave()">⬇ Descargar PDF</button>
     <button class="cb cb-close" onclick="closeContract()">Cerrar</button>
   </div>
   <div id="drive-status" style="display:none;font-size:11px;font-family:var(--mono);padding:6px 16px;background:#1a1a1a;border-bottom:1px solid #333;color:#ffb347;"></div>
@@ -695,11 +689,13 @@ function save() {
 
 async function syncToSheet(rec) {
   try {
+    // Add tipo so Apps Script routes to correct sheet
+    const payload = Object.assign({ tipo: 'registro' }, rec);
     await fetch(SHEET_URL, {
       method: 'POST',
       mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(rec)
+      body: JSON.stringify(payload)
     });
   } catch(e) { console.warn('Sin conexión, registro guardado solo local.'); }
 }
@@ -896,7 +892,7 @@ const TIPO_LABEL   = { paquete:'📦 Paquete', sobre:'✉ Sobre', documento:'�
 
 function badge(cls, label) { return `<span class="badge ${cls}">${label}</span>`; }
 
-// ── PHOTOS + OCR (Tesseract.js — sin API key, corre en navegador) ──
+// ── PHOTOS + OCR ──────────────────────────────────────────────
 let tesseractReady = false;
 let Tesseract = null;
 
@@ -912,7 +908,8 @@ function loadTesseract() {
 }
 
 function triggerCamera(key) {
-  document.getElementById('cam-' + key).click();
+  const id = key === 'guide' ? 'cam-guide' : 'cam-' + key;
+  document.getElementById(id).click();
 }
 
 function showOcrStatus(msg, type) {
@@ -931,84 +928,90 @@ function showOcrStatus(msg, type) {
   if (type !== 'loading') setTimeout(() => el.style.display = 'none', 5000);
 }
 
-// Extract best name candidate from raw OCR text
-function extractName(raw, isId) {
-  // Normalize: remove junk chars, collapse spaces
-  const lines = raw
-    .split('\n')
-    .map(l => l.replace(/[^a-záéíóúüñA-ZÁÉÍÓÚÜÑ\s]/g, ' ').replace(/\s+/g,' ').trim())
-    .filter(l => l.length > 3);
-
-  if (isId) {
-    // On Mexican INE, the name is usually on a line with 2-4 words, all caps or title case
-    // Look for lines that look like names (letters only, 2-5 words, 5-50 chars)
-    const nameLine = lines.find(l => {
-      const words = l.split(' ').filter(w => w.length > 1);
-      return words.length >= 2 && words.length <= 5 && l.length >= 5 && l.length <= 55
-        && !/INSTITUTO|ELECTORAL|CREDENCIAL|VOTAR|CURP|FECHA|DOMICILIO|ESTADO|MUNICIPIO|SECCIÓN|CLAVE/i.test(l);
-    });
-    return nameLine || lines[0] || '';
-  } else {
-    // On shipping label, destinatario is often after "PARA:", "TO:", "DESTINATARIO:"
-    const paraLine = lines.find(l => /^(PARA|TO|DESTINATARIO|ATTN|A:|DELIVER TO)/i.test(l));
-    if (paraLine) {
-      return paraLine.replace(/^(PARA|TO|DESTINATARIO|ATTN|A:|DELIVER TO)[:\s]*/i,'').trim();
+// ── FOCUS NEXT EMPTY FIELD ────────────────────────────────────
+function focusNextEmpty() {
+  const fields = ['f-codigo','f-guia','f-remitente','f-destinatario','f-articulo','f-recibio'];
+  for (const id of fields) {
+    const el = document.getElementById(id);
+    if (el && !el.value.trim()) {
+      setTimeout(() => { el.focus(); el.scrollIntoView({ behavior:'smooth', block:'center' }); }, 200);
+      return;
     }
-    // Otherwise pick longest plausible name line
-    return lines
-      .filter(l => {
-        const w = l.split(' ').filter(x => x.length > 1);
-        return w.length >= 2 && w.length <= 6 && l.length <= 60
-          && !/CALLE|AVE|COL|CP|CIUDAD|ESTADO|MEXICO|ZIP|PHONE|TEL|RFC/i.test(l);
-      })
-      .sort((a,b) => b.length - a.length)[0] || lines[0] || '';
   }
 }
 
-async function handlePhotoOCR(e, key) {
-  const file = e.target.files[0];
-  if (!file) return;
-
+// ── GUIDE PHOTO → reads barcode/label → fills form ────────────
+async function handleGuidePhoto(e) {
+  const file = e.target.files[0]; if (!file) return;
   const reader = new FileReader();
   reader.onload = async ev => {
     const dataUrl = ev.target.result;
-    photoData[key] = dataUrl;
-
-    // Show preview
-    document.getElementById('prev-'+key).src = dataUrl;
-    document.getElementById('prev-'+key).style.display = 'block';
-    document.getElementById('ph-'+key).style.display = 'none';
-    document.getElementById('clr-'+key).style.display = 'flex';
-
-    const isId = key === 'id';
-    showOcrStatus('⏳ Cargando motor OCR… (primera vez tarda ~10 seg)', 'loading');
-
+    photoData.guide = dataUrl;
+    document.getElementById('prev-guide').src = dataUrl;
+    document.getElementById('prev-guide').style.display = 'block';
+    document.getElementById('ph-guide').style.display = 'none';
+    document.getElementById('clr-guide').style.display = 'flex';
+    showOcrStatus('⏳ Leyendo etiqueta… (primera vez tarda ~10 seg)', 'loading');
     try {
       await loadTesseract();
-      showOcrStatus(isId ? '🔍 Leyendo INE…' : '🔍 Leyendo etiqueta…', 'loading');
-
+      showOcrStatus('🔍 Analizando guía y datos…', 'loading');
       const worker = await Tesseract.createWorker('spa', 1, {
         workerPath: 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/worker.min.js',
         corePath:   'https://cdn.jsdelivr.net/npm/tesseract.js-core@5/tesseract-core-simd-lstm.wasm.js',
         langPath:   'https://cdn.jsdelivr.net/npm/tesseract.js-core@5',
       });
-
       const { data: { text } } = await worker.recognize(dataUrl);
       await worker.terminate();
-
-      const name = extractName(text, isId);
-
-      if (!name) {
-        showOcrStatus('⚠ No se detectó un nombre. Escríbelo manualmente.', 'err');
-      } else {
-        const field = isId ? 'f-remitente' : 'f-destinatario';
-        document.getElementById(field).value = name;
-        showOcrStatus(`✓ ${isId ? 'Remitente' : 'Destinatario'} detectado: ${name}`, 'ok');
+      // Extract barcode numbers
+      const nums = (text.match(/\d{10,34}/g) || []);
+      let detected = [];
+      if (nums.length) {
+        document.getElementById('f-codigo').value = nums[0];
+        autoExtract();
+        detected.push('código');
       }
+      // Extract name for remitente
+      const lines = text.split('\n').map(l=>l.replace(/[^a-záéíóúüñA-ZÁÉÍÓÚÜÑ\s]/g,' ').replace(/\s+/,' ').trim()).filter(l=>l.length>4);
+      const nameLine = lines.find(l=>{ const w=l.split(' ').filter(x=>x.length>1); return w.length>=2&&w.length<=5&&l.length<=55&&!/FEDEX|DHL|ESTAFETA|MERCADO|PAQUETE|GUIA|ENVIO|RASTREO|TRACKING/i.test(l); });
+      if (nameLine && !document.getElementById('f-remitente').value) {
+        document.getElementById('f-remitente').value = nameLine;
+        detected.push('remitente');
+      }
+      if (detected.length) {
+        showOcrStatus('✓ Detectado: ' + detected.join(', '), 'ok');
+      } else {
+        showOcrStatus('⚠ No se detectaron datos. Verifica la foto o escríbelos.', 'err');
+      }
+      focusNextEmpty();
     } catch(err) {
-      showOcrStatus('⚠ OCR no disponible. Escribe el nombre manualmente.', 'err');
-      console.warn('OCR error:', err);
+      showOcrStatus('⚠ OCR no disponible. Ingresa datos manualmente.', 'err');
+      focusNextEmpty();
     }
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearGuidePhoto(e) {
+  e.stopPropagation(); e.preventDefault();
+  photoData.guide = null;
+  document.getElementById('prev-guide').src = '';
+  document.getElementById('prev-guide').style.display = 'none';
+  document.getElementById('ph-guide').style.display = 'flex';
+  document.getElementById('clr-guide').style.display = 'none';
+  document.getElementById('cam-guide').value = '';
+}
+
+async function handlePhotoOCR(e, key) {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const dataUrl = ev.target.result;
+    photoData[key] = dataUrl;
+    document.getElementById('prev-'+key).src = dataUrl;
+    document.getElementById('prev-'+key).style.display = 'block';
+    document.getElementById('ph-'+key).style.display = 'none';
+    document.getElementById('clr-'+key).style.display = 'flex';
+    focusNextEmpty();
   };
   reader.readAsDataURL(file);
 }
@@ -1239,7 +1242,7 @@ function buildContractHTML(rec) {
   <div class="lp-section-title">I. Datos del Envío</div>
   <div class="lp-grid">
     <div class="lp-field"><div class="lp-field-label">Paquetería</div><div class="lp-field-val">${rec.paq}</div></div>
-    <div class="lp-field"><div class="lp-field-label">Número de guía</div><div class="lp-field-val">${rec.guia}</div></div>
+    <div class="lp-field"><div class="lp-field-label">Número de guía</div><div class="lp-field-val">${rec.guia} &nbsp;<a href="${getUrl(rec.paq,rec.guia)}" target="_blank" style="font-size:8pt;color:#1a3a6b;text-decoration:none;border:1px solid #1a3a6b;padding:1px 6px;border-radius:3px;">📍 Rastrear envío ↗</a></div></div>
     <div class="lp-field"><div class="lp-field-label">Descripción del contenido</div><div class="lp-field-val">${rec.articulo||'No especificado'}</div></div>
     <div class="lp-field"><div class="lp-field-label">Estatus al ingreso</div><div class="lp-field-val">${STATUS_ES[rec.status]||rec.status}</div></div>
     ${rec.obs ? `<div class="lp-field" style="grid-column:1/-1"><div class="lp-field-label">Observaciones</div><div class="lp-field-val">${rec.obs}</div></div>` : ''}
@@ -1257,24 +1260,22 @@ function buildContractHTML(rec) {
 </div>
 
 <div class="lp-section">
-  <div class="lp-section-title">III. Términos y Condiciones del Servicio</div>
-  <p style="font-size:9.5pt;color:#555;margin-bottom:3mm;font-family:'Barlow',sans-serif;">
+  <div class="lp-section-title">III. Términos y Condiciones del Servicio Digital</div>
   <p style="font-size:7.5pt;color:#333;margin-bottom:2.5mm;text-align:justify;font-family:'Times New Roman',serif;">
-    En la ciudad de <b>Agua Dulce, Veracruz</b>, siendo el <b>${fecha} a las ${hora} horas</b>, comparecen: por una parte, <b>${CENTRO.nombre}</b>, representado por el C. <b>${CENTRO.responsable}</b>, ${CENTRO.tipo}, con domicilio en ${CENTRO.direccion}, ${CENTRO.ciudad} (en adelante "EL CENTRO"); y por la otra, el cliente identificado como <b>${rec.remitente||'_________________________'}</b> (en adelante "EL CLIENTE"), quienes convienen en celebrar el presente contrato de conformidad con los artículos <b>1793, 1794, 1796 y 2025 del Código Civil Federal</b>, y los artículos <b>75, 80, 81, 85 y 371 del Código de Comercio vigente</b>, al tenor de las siguientes:
+    En la ciudad de <b>Agua Dulce, Veracruz</b>, siendo el <b>${fecha} a las ${hora} horas</b>, comparecen: por una parte, <b>${CENTRO.nombre}</b>, representado por el C. <b>${CENTRO.responsable}</b>, ${CENTRO.tipo} (en adelante "EL CENTRO"); y EL CLIENTE identificado como <b>${rec.remitente||'_________________________'}</b>. Ambas partes celebran el presente contrato conforme a los artículos <b>1793, 1794 y 2025 del Código Civil Federal</b>, artículos <b>75, 80, 81 y 89 del Código de Comercio</b>, y la normativa aplicable en materia de <b>comercio electrónico y firma electrónica</b>:
   </p>
-  </p>
 
-  <div class="lp-clause"><span class="lp-clause-num">CLÁUSULA PRIMERA — NATURALEZA DEL SERVICIO.</span> <em>${CENTRO.nombre}</em> actúa exclusivamente como <strong>intermediario logístico</strong> entre el cliente y la empresa de paquetería y mensajería contratada (<strong>${rec.paq}</strong>). El presente centro de envíos no tiene el carácter de empresa transportista, por lo que no asume la custodia, ni la responsabilidad sobre el proceso de traslado, entrega o devolución del paquete, los cuales quedan bajo el control exclusivo de la paquetería seleccionada.</div>
+  <div class="lp-clause"><span class="lp-clause-num">CLÁUSULA PRIMERA — INTERMEDIACIÓN A TRAVÉS DE PLATAFORMAS DIGITALES.</span> EL CENTRO opera como <b>intermediario logístico digital</b>, facilitando el acceso a plataformas tecnológicas de paquetería (<b>${rec.paq}</b>) para la generación de guías electrónicas, rastreo digital y gestión de envíos. EL CENTRO no tiene carácter de transportista; su función es la facilitación tecnológica del acceso a dichos servicios digitales conforme al artículo <b>89 del Código de Comercio</b>.</div>
 
-  <div class="lp-clause"><span class="lp-clause-num">CLÁUSULA SEGUNDA — RESPONSABILIDAD DEL CLIENTE.</span> El cliente declara, bajo <strong>protesta de decir verdad</strong> en términos del artículo 1793 del Código Civil Federal, que: (a) toda la información proporcionada sobre remitente y destinatario es verídica, correcta y completa; (b) el contenido del paquete es lícito, no representa riesgo alguno y no se encuentra dentro de los artículos prohibidos por la paquetería ni por la legislación mexicana vigente, incluyendo sin limitar la <strong>Ley Aduanera, Ley General de Salud, Ley Federal de Armas de Fuego y Explosivos</strong> y demás ordenamientos aplicables; (c) el empaque y embalaje es el adecuado para el tipo de envío y protege debidamente el contenido durante el traslado.</div>
+  <div class="lp-clause"><span class="lp-clause-num">CLÁUSULA SEGUNDA — GUÍA ELECTRÓNICA Y RASTREO DIGITAL.</span> La guía <b>${rec.guia}</b> es un documento electrónico generado vía plataforma digital de <b>${rec.paq}</b>. EL CLIENTE puede rastrear su envío en tiempo real en: <b>${getUrl(rec.paq,rec.guia)}</b>. El seguimiento queda sujeto a los sistemas tecnológicos de la paquetería, sin responsabilidad de EL CENTRO por fallas en plataformas de terceros.</div>
 
-  <div class="lp-clause"><span class="lp-clause-num">CLÁUSULA TERCERA — DESLINDE Y EXENCIÓN DE RESPONSABILIDAD.</span> <em>${CENTRO.nombre}</em> queda expresamente liberado, sin responsabilidad administrativa, fiscal ni legal, ante cualquier situación derivada de: pérdida, robo, extravío, daño o retraso del paquete imputable a la paquetería o a terceros; declaración falsa, incorrecta o dolosa del contenido por parte del cliente; caso fortuito, fuerza mayor, contingencias climáticas, sanitarias o cualquier hecho ajeno a la voluntad de este centro; incidencias en la ruta de entrega; así como cualquier irregularidad derivada de la información errónea proporcionada por el cliente.</div>
+  <div class="lp-clause"><span class="lp-clause-num">CLÁUSULA TERCERA — DECLARACIONES DEL CLIENTE.</span> EL CLIENTE declara <b>bajo protesta de decir verdad</b> que: (a) la información proporcionada es verídica y completa; (b) el contenido es lícito conforme a la <b>Ley Aduanera, Ley General de Salud y NOM-002-SCT/2011</b>; (c) el empaque es adecuado; (d) no se envían objetos de valor no declarados ni sustancias ilegales. Asume plena responsabilidad civil y penal por declaraciones falsas.</div>
 
-  <div class="lp-clause"><span class="lp-clause-num">CLÁUSULA CUARTA — SUJECIÓN A POLÍTICAS DE PAQUETERÍA.</span> El servicio de envío está sujeto en su totalidad a los términos, condiciones, rutas, tarifas, tiempos de entrega y políticas operativas propias de <strong>${rec.paq}</strong>. El cliente reconoce que cualquier reclamación por siniestro, extravío o daño deberá gestionarse directamente ante dicha empresa de paquetería, en los términos y plazos que ésta establezca conforme a su reglamento interno y a la <strong>Ley de Caminos, Puentes y Autotransporte Federal</strong> en lo que resulte aplicable.</div>
+  <div class="lp-clause"><span class="lp-clause-num">CLÁUSULA CUARTA — EXENCIÓN DE RESPONSABILIDAD.</span> EL CENTRO queda <b>expresamente liberado</b> de responsabilidad por pérdida, daño, retraso o extravío atribuible a <b>${rec.paq}</b>; fallas en plataformas digitales de terceros; declaraciones incorrectas del cliente; caso fortuito o fuerza mayor. Las reclamaciones deben gestionarse directamente ante <b>${rec.paq}</b> conforme a sus términos y a la <b>Ley de Caminos, Puentes y Autotransporte Federal</b>.</div>
 
-  <div class="lp-clause"><span class="lp-clause-num">CLÁUSULA QUINTA — PROTECCIÓN DE DATOS PERSONALES.</span> El tratamiento de los datos personales recabados en el presente instrumento se realiza de conformidad con la <strong>Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP)</strong> y su Reglamento, con la única finalidad de gestionar el registro y seguimiento del servicio de intermediación logística contratado. El cliente podrá ejercer sus derechos ARCO contactando al centro en la dirección indicada en este documento.</div>
+  <div class="lp-clause"><span class="lp-clause-num">CLÁUSULA QUINTA — DATOS PERSONALES Y PRIVACIDAD DIGITAL.</span> Los datos recabados digitalmente se tratan conforme a la <b>LFPDPPP</b> y la <b>NOM-151-SCFI-2016</b> sobre conservación de mensajes de datos, exclusivamente para la gestión del servicio de intermediación digital contratado.</div>
 
-  <div class="lp-clause"><span class="lp-clause-num">CLÁUSULA SEXTA — ACEPTACIÓN EXPRESA.</span> La entrega física del paquete en las instalaciones de <em>${CENTRO.nombre}</em>, así como la firma del presente documento, constituyen la aceptación plena, expresa e irrevocable de todas las cláusulas aquí contenidas, de conformidad con el artículo 1803 del Código Civil Federal.</div>
+  <div class="lp-clause"><span class="lp-clause-num">CLÁUSULA SEXTA — VALIDEZ DE FIRMA DIGITAL.</span> La firma electrónica capturada tiene plena validez conforme al artículo <b>89 del Código de Comercio</b> y la <b>Ley de Firma Electrónica Avanzada</b>. EL CLIENTE declara haber leído y aceptado íntegramente todos los términos del presente contrato digital.</div>
 </div>
 
 <div class="lp-sign-section">
@@ -1297,8 +1298,21 @@ function buildContractHTML(rec) {
 function openContract(rec) {
   document.getElementById('contract-page').innerHTML = buildContractHTML(rec);
   document.getElementById('contract-modal').classList.add('open');
-  // Init signature pad
   setTimeout(() => initSigPad(), 100);
+}
+
+// Auto-save to Drive when PDF is downloaded
+async function generatePDFAndAutoSave() {
+  await generatePDF();
+  // Auto upload to Drive in background
+  if (driveToken || true) {
+    driveStatus('☁ Guardando automáticamente en Drive…');
+    try {
+      await saveAllToDrive();
+    } catch(e) {
+      driveStatus('⚠ No se pudo guardar en Drive. Descarga manual disponible.', '#ffb347');
+    }
+  }
 }
 
 function closeContract() {
@@ -1581,11 +1595,13 @@ async function saveAllToDrive() {
     const base  = `${folio}_${ts}`;
 
     let uploaded = 0;
+    let linkDrive = `https://drive.google.com/drive/folders/${folderId}`;
 
     // 1. Upload PDF
     driveStatus('📄 Subiendo contrato PDF…');
     const pdfBlob = await buildPDFBlob();
-    await uploadFileToDrive(token, folderId, `${base}_contrato.pdf`, 'application/pdf', pdfBlob);
+    const pdfFile = await uploadFileToDrive(token, folderId, `${base}_contrato.pdf`, 'application/pdf', pdfBlob);
+    if (pdfFile.webViewLink) linkDrive = pdfFile.webViewLink;
     uploaded++;
 
     // 2. Upload ID photo if exists
@@ -1601,6 +1617,25 @@ async function saveAllToDrive() {
       await uploadFileToDrive(token, folderId, `${base}_paquete.jpg`, 'image/jpeg', photoData.pkg);
       uploaded++;
     }
+
+    // 4. Log to Sheets — Contratos tab
+    driveStatus('📊 Registrando en Google Sheets…');
+    const remitente = document.querySelector('.lp-field-val')?.textContent || '';
+    const guia      = document.querySelector('.lp-folio-val')?.textContent || '';
+    try {
+      await fetch(SHEET_URL, {
+        method: 'POST', mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tipo: 'contrato_drive',
+          folio, timestamp: new Date().toLocaleString('es-MX'),
+          archivoPDF: true,
+          fotoId: !!photoData.id,
+          fotoPkg: !!photoData.pkg,
+          linkDrive, remitente, guia
+        })
+      });
+    } catch(e) {}
 
     driveStatus(`✅ ${uploaded} archivo(s) guardados en Drive → carpeta "${FOLDER_NAME}"`, '#4dff91');
     setTimeout(() => driveStatus(''), 6000);
@@ -1733,8 +1768,12 @@ function dismissUpdate() {
   document.getElementById('update-toast').classList.remove('show');
 }
 
-// Auto-check on load silently (no UI change unless update found)
+// Auto-check once per day
 async function silentUpdateCheck() {
+  const lastCheck = localStorage.getItem('last_update_check');
+  const today = new Date().toDateString();
+  if (lastCheck === today) return; // Already checked today
+  localStorage.setItem('last_update_check', today);
   try {
     const res = await fetch(GITHUB_RAW + '?t=' + Date.now());
     if (!res.ok) return;
