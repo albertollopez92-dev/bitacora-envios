@@ -1375,7 +1375,7 @@ async function generatePDFAndAutoSave() {
     driveStatus('⚠ No se pudo subir a Drive.', '#ffb347');
   }
 
-  // Send WhatsApp to client with PDF link
+  // Send WhatsApp Business to client with PDF link
   if (rec && rec.wa) {
     const waNum    = rec.wa.replace(/\D/g,'');
     const trackUrl = (CARRIERS[rec.paq] || CARRIERS.FedEx).url(rec.guia);
@@ -1394,8 +1394,25 @@ async function generatePDFAndAutoSave() {
       `📞 923-233-3389 | 🕐 Lun–Sáb 10am–8pm\n` +
       `_Centro de Envíos ADomicilio · Agua Dulce, Veracruz_`;
 
+    const encoded = encodeURIComponent(msg);
+
     setTimeout(() => {
-      window.open(`https://wa.me/${waNum}?text=${encodeURIComponent(msg)}`, '_blank');
+      // Try WhatsApp Business deep link first (works on Android)
+      // Falls back to wa.me if Business app not installed
+      const isMobile = /android|iphone|ipad/i.test(navigator.userAgent);
+      if (isMobile) {
+        // Intent link opens WhatsApp Business on Android directly
+        const intent = `intent://send/${waNum}#Intent;scheme=whatsapp;package=com.whatsapp.w4b;action=android.intent.action.SENDTO;S.android.intent.extra.TEXT=${encoded};end`;
+        const a = document.createElement('a');
+        a.href = intent;
+        a.click();
+        // Fallback after 1.5s if intent didn't open
+        setTimeout(() => {
+          window.open(`https://wa.me/${waNum}?text=${encoded}`, '_blank');
+        }, 1500);
+      } else {
+        window.open(`https://wa.me/${waNum}?text=${encoded}`, '_blank');
+      }
     }, 1500);
   }
 }
